@@ -1,0 +1,149 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum RoleType {
+  regular
+  cashier
+  manager
+  superuser
+}
+
+enum TransactionType {
+  purchase
+  redemption
+  adjustment
+  event
+  transfer
+}
+
+enum PromotionType {
+  automatic
+  onetime
+}
+
+model User {
+  id         Int         @id @default(autoincrement())
+  utorid     String      @unique
+  name       String      @default("")
+  email      String      @unique
+  birthday   DateTime    @default("2000-01-01T00:00:00Z")
+  role       RoleType    @default(regular)
+  points     Int         @default(0)
+  createdAt  DateTime    @default(now())
+  lastLogin  DateTime?
+  verified   Boolean     @default(false)
+  avatarUrl  String?
+  expiresAt  DateTime?
+  resetToken String?
+  suspicious Boolean     @default(false)
+  password   String?
+
+  eventsCreated   Event[]           @relation("UserEventsCreated")
+  organizedEvents EventOrganizer[]
+  eventRsvps      EventRSVP[]
+  pointsGiven     EventPointAward[] @relation("EventPointsGiven")
+  pointsReceived  EventPointAward[] @relation("EventPointsReceived")
+}
+
+model Promotion {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String
+  type        PromotionType
+  startTime   DateTime
+  endTime     DateTime
+  minSpending Float?
+  rate        Float?
+  points      Int?
+}
+
+enum RSVPStatus {
+  RSVPED
+  CANCELLED
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  location    String?
+  startTime   DateTime
+  endTime     DateTime
+  capacity    Int?
+  points      Int      @default(0)
+  published   Boolean  @default(false)
+
+  createdById Int
+  createdBy   User @relation("UserEventsCreated", fields: [createdById], references: [id])
+
+  organizers EventOrganizer[]
+  rsvps      EventRSVP[]
+  awards     EventPointAward[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EventOrganizer {
+  eventId Int
+  userId  Int
+
+  event Event @relation(fields: [eventId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@id([eventId, userId])
+}
+
+model EventRSVP {
+  eventId  Int
+  userId   Int
+  status   RSVPStatus @default(RSVPED)
+  // this is the “attendance confirmed” flag
+  attended Boolean    @default(false)
+
+  event Event @relation(fields: [eventId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@id([eventId, userId])
+}
+
+model EventPointAward {
+  id          Int @id @default(autoincrement())
+  eventId     Int
+  attendeeId  Int
+  awardedById Int
+  points      Int
+
+  event     Event @relation(fields: [eventId], references: [id])
+  attendee  User  @relation("EventPointsReceived", fields: [attendeeId], references: [id])
+  awardedBy User  @relation("EventPointsGiven", fields: [awardedById], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Transaction {
+  id             Int              @id @default(autoincrement())
+  type           TransactionType
+  utorid         String?
+  sender         String?
+  recipient      String?
+  spent          Float?
+  amount         Int?
+  relatedId      Int?
+  remark         String?
+  promotionIds   Json?
+  createdBy      String
+  suspicious     Boolean          @default(false)
+  processedBy    String?
+  processedAt    DateTime?
+  eventId        Int?
+  createdAt      DateTime         @default(now())
+}

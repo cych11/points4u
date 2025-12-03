@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,19 +12,39 @@ import {
 import { useContext } from "react";
 import { PageContext } from "./contexts/PageContext.jsx";
 
+const managerEventPages = ['create-events', 'display-events', 'modify-event', 'event-users'];
+
+const navLinkCSS = 'block px-4 py-2 rounded-md hover:bg-neutral-100 transition-colors cursor-pointer text-sm font-medium';
+
 export default function ManagerLayout() {
-  const { page } = useContext(PageContext);
+  const { page, setPage } = useContext(PageContext);
+  const navigate = useNavigate();
   return (
     <div>
-      <div className='flex p-2 border-b space-x-4 pl-6'>
+      <div className='flex p-2 border-b space-x-8 pl-6'>
         <h2 className="flex items-center">Manager View</h2>
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className={`${page === 'create-events' ? 'bg-neutral-100' : ''}`}>Create Events</NavigationMenuTrigger>
-              {/* <NavigationMenuContent>
-                <NavigationMenuLink>Link</NavigationMenuLink>
-              </NavigationMenuContent> */}
+              <NavigationMenuTrigger className={`px-4 rounded-md transition-colors ${managerEventPages.includes(page) ? 'bg-blue-100 text-blue-900' : 'hover:bg-neutral-50'}`}>
+                {page === 'create-events' ? 'Create Event' : page === 'display-events' ? 'Event Display' : page === 'modify-event' ? 'Modify Event' : page === 'event-users' ? 'Event Users' : 'Events'}
+              </NavigationMenuTrigger>
+              <NavigationMenuContent className="w-[300px]">
+                <div className="p-2 whitespace-nowrap">
+                  <NavigationMenuLink className={navLinkCSS} onClick={() => {
+                    setPage('create-events');
+                    navigate('/managers/create-events');
+                  }}>
+                    Create Event
+                  </NavigationMenuLink>
+                  <NavigationMenuLink className={navLinkCSS} onClick={() => {
+                    setPage('display-events');
+                    navigate('/managers/display-events');
+                  }}>
+                    View Events
+                  </NavigationMenuLink>
+                </div>
+              </NavigationMenuContent>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>

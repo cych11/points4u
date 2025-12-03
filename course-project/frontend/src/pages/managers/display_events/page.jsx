@@ -27,8 +27,8 @@ const mock_data = [
     id: 3,
     name: "Event 3",
     location: "Online",
-    startTime: "2025-12-01T12:00:00Z",
-    endTime: "2025-12-01T15:00:00Z",
+    startTime: "2025-12-08T12:00:00Z",
+    endTime: "2025-12-10T15:00:00Z",
     capacity: 100,
     numGuests: 50,
   },
@@ -58,6 +58,8 @@ export default function DisplayEventsPage() {
   const [filteredData, setFilteredData] = useState(mock_data);
   const [filteredNames, setFilteredNames] = useState([]);
   const [filteredLocations, setFilteredLocations] = useState([]);
+  const [startedOnly, setStartedOnly] = useState(false);
+  const [endedOnly, setEndedOnly] = useState(false);
   
   useEffect(() => {
     setPage('display-events');
@@ -76,11 +78,25 @@ export default function DisplayEventsPage() {
             return false;
           }
         }
+        if (startedOnly) {
+          const start = new Date(event.startTime);
+          const now = new Date();
+          if (start > now) {
+            return false;
+          }
+        }
+        if (endedOnly) {
+          const end = new Date(event.endTime);
+          const now = new Date();
+          if (end > now) {
+            return false;
+          }
+        }
         return true;
       }));
     }
     applyFilters();
-  }, [filteredNames, filteredLocations])
+  }, [filteredNames, filteredLocations, startedOnly, endedOnly]);
 
   return (
     <div className="flex ml-40 mt-20">
@@ -98,6 +114,16 @@ export default function DisplayEventsPage() {
         <div className='mt-10'>
           <EventFilter filter={filteredNames} onChange={setFilteredNames} type="Name" />
           <EventFilter filter={filteredLocations} onChange={setFilteredLocations} type="Location" />
+          <div className='flex w-full space-x-10'>
+            <div className='flex items-center gap-2 mt-2'>
+              <input type='checkbox' id="Already Started" onClick={() => setStartedOnly(!startedOnly)} />
+              <label htmlFor="Already Started" className='text-sm font-medium'>Already Started</label>
+            </div>
+            <div className='flex items-center gap-2 mt-2'>
+              <input type='checkbox' id="Already Ended" onClick={() => setEndedOnly(!endedOnly)} />
+              <label htmlFor="Already Ended" className='text-sm font-medium'>Already Ended</label>
+            </div>
+          </div>
         </div>
       </div>
     </div>

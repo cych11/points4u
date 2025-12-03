@@ -30,7 +30,7 @@ app.use(cors());
 // Enable trust proxy for accurate IP detection in rate limiting
 app.set('trust proxy', true);
 app.use(express.json());
-app.use("/", routes);
+app.use("/api", routes);
 
 const server = app.listen(port, () => {
     console.log(`Server running on port ${port}`);

@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 
 export default function EventFormField({ field, type, value, onChange }) {
   function handleNumberChange(e) {
@@ -9,7 +8,7 @@ export default function EventFormField({ field, type, value, onChange }) {
 
   return (
     <div className='flex flex-col space-y-1'>
-      <label className="font-medium" for='new-event-name'>{field}</label>
+      <label className="font-medium" htmlFor='new-event-name'>{field}</label>
       <input 
         id='new-event-name' 
         type={type === 'pos-int' ? "number" : 'text'}

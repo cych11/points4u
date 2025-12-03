@@ -105,6 +105,9 @@ export default function DisplayEventsPage() {
         {filteredData.slice((currentPage - 1) * 4, ((currentPage - 1) * 4) + 4).map((event) => (
           <Event key={event.id} event={event} />
         ))}
+        {filteredData.length === 0 && (
+          <div className="text-center text-gray-500">No events found.</div>
+        )}
         <div className='flex justify-center'>
           <Pagination count={Math.ceil(filteredData.length / 4)} page={currentPage} onChange={(event, value) => setCurrentPage(value)} />
         </div>

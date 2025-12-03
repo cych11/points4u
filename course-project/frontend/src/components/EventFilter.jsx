@@ -3,7 +3,19 @@ export default function EventFilter({ filter, onChange, type }) {
     <div className='mt-2'>
       <label className='font-bold text-sm'>{type}</label>
       <div className='flex w-full justify-center mt-1 space-x-2'>
-        <input type="text" className="border shadow-sm h-[33px] px-3 rounded-[7px] mb-4 w-full" placeholder="Enter event name" />
+        <input
+          type="text"
+          className="border shadow-sm h-[33px] px-3 rounded-[7px] mb-4 w-full"
+          placeholder="Enter event name"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              const val = e.target.value;
+              if (val.trim() === '') return;
+              onChange([...filter, val]);
+              e.target.value = '';
+            }
+          }}
+        />
         <button 
           className="border rounded-[7px] px-4 shadow-sm h-[33px] hover:bg-blue-600 hover:text-white text-sm" 
           onClick={(e) => {

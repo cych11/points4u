@@ -1,9 +1,17 @@
 import EventFormField from "@/components/EventFormField"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import DateTimeField from "@/components/DateTimeField";
+import { useContext } from "react";
+import { PageContext } from "../contexts/PageContext.jsx";
 
 export default function CreateEventsPage() {
+
+  const { setPage } = useContext(PageContext);
+  
+  useEffect(() => {
+    setPage('create-events');
+  }, [setPage]);
 
   const [startDate, setStartDate] = useState(dayjs());
   const [endDate, setEndDate] = useState(dayjs());

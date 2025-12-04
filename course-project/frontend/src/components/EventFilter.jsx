@@ -26,7 +26,7 @@ export default function EventFilter({ filter, onChange, type }) {
             Apply
           </button>
       </div>  
-      <div className="flex space-x-2 flex-wrap">
+      <div className="flex space-x-2 flex-wrap gap-y-2">
         {filter.map((item, index) => (
           <div key={index} className='flex space-x-3 items-center justify-center bg-blue-100 shadow-sm text-xs px-3 py-2 rounded-full'>
             <div className="flex items-center">{item}</div>

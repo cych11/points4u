@@ -123,7 +123,7 @@ export default function DisplayEventsPage() {
           <Pagination count={Math.ceil(filteredData.length / eventsPerPage)} page={currentPage} onChange={(event, value) => setCurrentPage(value)} />
         </div>
       </div>
-      <div className="ml-16 mt-[60px] w-[35%]">
+      <div className="ml-16 mt-[90px] w-[35%]">
         <h2 className="text-xl font-semibold">Filter Events</h2>
         <div className='mt-10'>
           <EventFilter filter={filteredNames} onChange={setFilteredNames} type="Name" />

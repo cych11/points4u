@@ -3,7 +3,7 @@ import { PageContext } from "../contexts/PageContext"
 import { useContext, useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import EventFilter from "@/components/EventFilter.jsx";
-
+import FilterCheckBox from "@/components/FilterCheckBox";
 const mock_data = [
   {
     id: 1,
@@ -60,6 +60,8 @@ export default function DisplayEventsPage() {
   const [filteredLocations, setFilteredLocations] = useState([]);
   const [startedOnly, setStartedOnly] = useState(false);
   const [endedOnly, setEndedOnly] = useState(false);
+  const [showFull, setShowFull] = useState(false);
+  const [eventsPerPage, setEventsPerPage] = useState(10);
   
   useEffect(() => {
     setPage('display-events');
@@ -92,24 +94,33 @@ export default function DisplayEventsPage() {
             return false;
           }
         }
+        if (showFull && event.numGuests < event.capacity) {
+          return false;
+        }
         return true;
       }));
     }
     applyFilters();
-  }, [filteredNames, filteredLocations, startedOnly, endedOnly]);
+  }, [filteredNames, filteredLocations, startedOnly, endedOnly, showFull]);
 
   return (
     <div className="flex ml-40 mt-20">
-      <div className="space-y-6 w-[50%]">
+      <div className="w-[50%]">
         <h1 className="text-3xl font-bold">Events</h1>
-        {filteredData.slice((currentPage - 1) * 4, ((currentPage - 1) * 4) + 4).map((event) => (
-          <Event key={event.id} event={event} />
-        ))}
+        <div className="flex space-x-3 items-center mt-4">
+          <label htmlFor="events-per-page" className="text-sm font-medium">Events per page:</label>
+          <input type='number' min={1} step={1} className='border rounded-md text-sm p-1 w-[50px]' value={eventsPerPage} onChange={(e) => setEventsPerPage(e.target.value)} /> 
+        </div>
+        <div className='space-y-4 max-h-[580px] min-h-[580px] overflow-y-auto mt-3'>
+          {filteredData.slice((currentPage - 1) * eventsPerPage, ((currentPage - 1) * eventsPerPage) + eventsPerPage).map((event) => (
+            <Event key={event.id} event={event} />
+          ))}
+        </div>
         {filteredData.length === 0 && (
           <div className="text-center text-gray-500">No events found.</div>
         )}
-        <div className='flex justify-center'>
-          <Pagination count={Math.ceil(filteredData.length / 4)} page={currentPage} onChange={(event, value) => setCurrentPage(value)} />
+        <div className='flex justify-center mt-5'>
+          <Pagination count={Math.ceil(filteredData.length / eventsPerPage)} page={currentPage} onChange={(event, value) => setCurrentPage(value)} />
         </div>
       </div>
       <div className="ml-16 mt-[60px] w-[35%]">
@@ -117,15 +128,10 @@ export default function DisplayEventsPage() {
         <div className='mt-10'>
           <EventFilter filter={filteredNames} onChange={setFilteredNames} type="Name" />
           <EventFilter filter={filteredLocations} onChange={setFilteredLocations} type="Location" />
-          <div className='flex w-full space-x-10'>
-            <div className='flex items-center gap-2 mt-2'>
-              <input type='checkbox' id="Already Started" onClick={() => setStartedOnly(!startedOnly)} />
-              <label htmlFor="Already Started" className='text-sm font-medium'>Already Started</label>
-            </div>
-            <div className='flex items-center gap-2 mt-2'>
-              <input type='checkbox' id="Already Ended" onClick={() => setEndedOnly(!endedOnly)} />
-              <label htmlFor="Already Ended" className='text-sm font-medium'>Already Ended</label>
-            </div>
+          <div className='flex w-full space-x-10 flex-wrap'>
+            <FilterCheckBox filter={startedOnly} onChange={setStartedOnly} type="Already Started" />
+            <FilterCheckBox filter={endedOnly} onChange={setEndedOnly} type="Already Ended" />
+            <FilterCheckBox filter={showFull} onChange={setShowFull} type="Show Full Events" />
           </div>
         </div>
       </div>

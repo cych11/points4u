@@ -69,6 +69,23 @@ export default function DisplayEventsPage() {
   }, [setPage]);
 
   // TODO: Create GET request to the fetch the events
+  useEffect(() => {
+    async function getEvents() {
+      const response = await fetch('/api/events', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      if (response.ok) {
+        // const data = await response.json();
+        // setFilteredData(data);
+      } else {
+        console.log('Failed to fetch events');
+      }
+    }
+    getEvents();
+  })
 
   useEffect(() => {
     function applyFilters() {

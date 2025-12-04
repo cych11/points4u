@@ -224,7 +224,7 @@ export default function ManageEventPage() {
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4"
+                        className="h-3 w-3"
                         viewBox="0 0 460.775 460.775"
                         fill="currentColor"
                       >
@@ -280,7 +280,7 @@ export default function ManageEventPage() {
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4"
+                        className="h-3 w-3"
                         viewBox="0 0 460.775 460.775"
                         fill="currentColor"
                       >

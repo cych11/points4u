@@ -2,17 +2,15 @@ import { Outlet, useNavigate } from "react-router-dom";
 import {
   NavigationMenu,
   NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu"
 import { useContext } from "react";
 import { PageContext } from "./contexts/PageContext.jsx";
 
-const managerEventPages = ['create-events', 'display-events', 'modify-event', 'event-users'];
+const managerEventPages = ['create-events', 'display-events', 'manage-event', 'event-users'];
 
 const navLinkCSS = 'block px-4 py-2 rounded-md hover:bg-neutral-100 transition-colors cursor-pointer text-sm font-medium';
 
@@ -27,7 +25,7 @@ export default function ManagerLayout() {
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuTrigger className={`px-4 rounded-md transition-colors ${managerEventPages.includes(page) ? 'bg-blue-100 text-blue-900' : 'hover:bg-neutral-50'}`}>
-                {page === 'create-events' ? 'Create Event' : page === 'display-events' ? 'Event Display' : page === 'modify-event' ? 'Modify Event' : page === 'event-users' ? 'Event Users' : 'Events'}
+                {page === 'create-events' ? 'Create Event' : page === 'display-events' ? 'Event Display' : page === 'manage-event' ? 'Manage Event' : page === 'event-users' ? 'Event Users' : 'Events'}
               </NavigationMenuTrigger>
               <NavigationMenuContent className="w-[300px]">
                 <div className="p-2 whitespace-nowrap">

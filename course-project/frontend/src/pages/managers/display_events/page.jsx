@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import EventFilter from "@/components/EventFilter.jsx";
 import FilterCheckBox from "@/components/FilterCheckBox";
+
 const mock_data = [
   {
     id: 1,
@@ -66,6 +67,8 @@ export default function DisplayEventsPage() {
   useEffect(() => {
     setPage('display-events');
   }, [setPage]);
+
+  // TODO: Create GET request to the fetch the events
 
   useEffect(() => {
     function applyFilters() {

@@ -3,6 +3,8 @@ const { AuthService, AuthError } = require("../services/auth");
 
 const RESET_RATE_LIMIT_MS = 60 * 1000;
 const recentResetRequests = new Map();
+const emailRegex = /^[a-zA-Z0-9._%+-]+@(?:mail\.)?utoronto\.ca$/i;
+const utoridRegex = /^[a-zA-Z0-9]{7,8}$/;
 
 const allowedFields = (payload, allowed) => Object.keys(payload).filter((key) => !allowed.includes(key));
 
@@ -99,4 +101,49 @@ const resetPasswordController = async (req, res) => {
   }
 };
 
-module.exports = { authenticateUserController, resetPasswordController, passwordResetRequestController };
+const registerController = async (req, res) => {
+  const payload = req.body ?? {};
+  const { utorid, name, email, password } = payload;
+
+  // Validate required fields
+  if (!utorid || !name || !email || !password) {
+    return res.status(400).json({ message: "Missing required fields." });
+  }
+
+  if (typeof utorid !== 'string' || typeof name !== 'string' || typeof email !== 'string' || typeof password !== 'string') {
+    return res.status(400).json({ message: "Invalid request body." });
+  }
+
+  // Validate utorid format (7-8 alphanumeric)
+  if (!utoridRegex.test(utorid.trim())) {
+    return res.status(400).json({ message: "Utorid must be 7-8 alphanumeric characters." });
+  }
+
+  // Validate name length
+  if (name.trim().length < 1 || name.trim().length > 50) {
+    return res.status(400).json({ message: "Name must be between 1 and 50 characters." });
+  }
+
+  // Validate email format (must be @utoronto.ca)
+  if (!emailRegex.test(email.trim())) {
+    return res.status(400).json({ message: "Email must be a valid University of Toronto email." });
+  }
+
+  // Validate password
+  if (!isValidPassword(password)) {
+    return res.status(400).json({ message: "Invalid password. Password must be 8-20 characters and contain uppercase, lowercase, number, and special character." });
+  }
+
+  try {
+    const user = await AuthService.register(utorid.trim(), name.trim(), email.trim(), password);
+    return res.status(201).json({ message: "Registration successful", user });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.status).json({ message: error.message });
+    }
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = { authenticateUserController, resetPasswordController, passwordResetRequestController, registerController };

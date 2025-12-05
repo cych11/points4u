@@ -119,6 +119,7 @@ const getUserByIdController = async (req, res) => {
       utorid: userRecord.utorid,
       name: userRecord.name,
       points: userRecord.points,
+      suspicious: userRecord.suspicious,
       verified: userRecord.verified
     };
     if (ensureRole(req.user.role, ['manager', 'superuser'])) {

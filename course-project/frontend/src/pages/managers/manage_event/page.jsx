@@ -34,10 +34,12 @@ export default function ManageEventPage() {
 
   useEffect(() => {
     async function getEventDetails() {
+      const token = localStorage.getItem('token');
       const response = await fetch(`/api/events/${id}`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         }
       });
       if (response.ok) {
@@ -57,10 +59,12 @@ export default function ManageEventPage() {
   }, [id]);
 
   async function handleSubmit() {
-    const response = await fetch('/api/events', {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`/api/events/${id}`, {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
         name: eventName ? eventName : null,
@@ -84,10 +88,12 @@ export default function ManageEventPage() {
   }
 
   async function handleAddedGuest(utorid) {
-    const response = await fetch(`api/events/${id}/guests`, {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`/api/events/${id}/guests`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({ utorid: utorid })
     });
@@ -103,10 +109,12 @@ export default function ManageEventPage() {
   }
 
   async function handleAddedOrganizer(utorid) {
-    const response = await fetch(`api/events/${id}/organizers`, {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`/api/events/${id}/organizers`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({ utorid: utorid })
     });
@@ -122,10 +130,12 @@ export default function ManageEventPage() {
   }
 
   async function handleDeleteGuest(user_id) {
-    const response = await fetch(`api/events/${id}/guests/${user_id}`, {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`/api/events/${id}/guests/${user_id}`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
     });
     if (!response.ok) {
@@ -140,10 +150,12 @@ export default function ManageEventPage() {
   }
 
   async function handleDeleteOrganizer(user_id) {
-    const response = await fetch(`api/events/${id}/organizers/${user_id}`, {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`/api/events/${id}/organizers/${user_id}`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
     });
     if (!response.ok) {

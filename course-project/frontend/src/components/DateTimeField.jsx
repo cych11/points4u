@@ -2,7 +2,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers';
 
-export default function DateTimeField({ field }) {
+export default function DateTimeField({ field, value, onChange }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='flex flex-col space-y-1'>
@@ -11,6 +11,8 @@ export default function DateTimeField({ field }) {
         Posted by Akis, modified by community. See post 'Timeline' for change history
         Retrieved 2025-12-02, License - CC BY-SA 4.0 */}
         <DateTimePicker
+              value={value}
+              onChange={onChange}
               className="DatePicker"
               slotProps={{textField:{
                 size:'small',

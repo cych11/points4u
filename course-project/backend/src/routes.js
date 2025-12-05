@@ -15,7 +15,8 @@ const {
 const {
     authenticateUserController,
     resetPasswordController,
-    passwordResetRequestController
+    passwordResetRequestController,
+    registerController
 } = require('./controllers/auth');
 
 const { createTransactionController, getTransactions, getSingleTransaction, setSuspicion, completeRedemption, createUserTransactionController, createOwnTransactionController, getOwnTransactionsController } = require('./controllers/transactions');
@@ -45,6 +46,7 @@ const router = express.Router();
 
 // auth
 router.post('/auth/tokens', authenticateUserController);
+router.post('/auth/register', registerController);
 router.post('/auth/resets', passwordResetRequestController);
 router.post('/auth/resets/:resetToken', resetPasswordController);
 

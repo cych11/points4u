@@ -89,6 +89,42 @@ class AuthService {
       resetToken: token
     };
   }
+
+  static async register(utorid, name, email, password) {
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({ where: { utorid } });
+    if (existingUser) {
+      throw new AuthError(409, "User already exists");
+    }
+
+    // Check if email is already taken
+    const existingEmail = await prisma.user.findUnique({ where: { email } });
+    if (existingEmail) {
+      throw new AuthError(409, "Email already registered");
+    }
+
+    // Hash password
+    const hash = await bcrypt.hash(password, 10);
+
+    // Create user with password set
+    const user = await prisma.user.create({
+      data: {
+        utorid: utorid.trim(),
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        password: hash,
+        role: 'regular',
+        verified: false
+      }
+    });
+
+    return {
+      id: user.id,
+      utorid: user.utorid,
+      name: user.name,
+      email: user.email
+    };
+  }
 }
 
 module.exports = { AuthService, AuthError };

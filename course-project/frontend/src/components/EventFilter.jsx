@@ -6,7 +6,7 @@ export default function EventFilter({ filter, onChange, type }) {
         <input
           type="text"
           className="border shadow-sm h-[33px] px-3 rounded-[7px] mb-4 w-full"
-          placeholder="Enter event name"
+          placeholder="Enter a name"
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               const val = e.target.value;

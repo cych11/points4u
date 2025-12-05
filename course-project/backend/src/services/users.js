@@ -176,7 +176,8 @@ class UserService {
       createdAt: toISODate(user.createdAt),
       lastLogin: toISODate(user.lastLogin),
       verified: user.verified,
-      avatarUrl: user.avatarUrl
+      avatarUrl: user.avatarUrl,
+      suspicious: user.suspicious
     };
   }
 }

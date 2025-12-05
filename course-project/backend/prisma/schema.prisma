@@ -7,6 +7,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator seed {
+  provider = "node ./prisma/seed.js"
+}
+
 enum RoleType {
   regular
   cashier

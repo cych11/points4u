@@ -12,8 +12,8 @@ export default function CreateEventsPage() {
     setPage('create-events');
   }, [setPage]);
 
-  const [startDate, setStartDate] = useState(dayjs());
-  const [endDate, setEndDate] = useState(dayjs());
+  const [startDate, setStartDate] = useState(dayjs().add(1, 'hour'));
+  const [endDate, setEndDate] = useState(dayjs().add(2, 'hours'));
   const [eventName, setEventName] = useState('');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
@@ -24,15 +24,51 @@ export default function CreateEventsPage() {
 
   async function handleSubmit() {
     console.log('Submitting')
+    
+    // Client-side validation
+    if (!eventName.trim()) {
+      setErrorMsg('Name is required');
+      return;
+    }
+    if (!description.trim()) {
+      setErrorMsg('Description is required');
+      return;
+    }
+    if (!location.trim()) {
+      setErrorMsg('Location is required');
+      return;
+    }
+    
+    // Validate dates
+    if (!startDate || !startDate.isValid()) {
+      setErrorMsg('Invalid start time');
+      return;
+    }
+    if (!endDate || !endDate.isValid()) {
+      setErrorMsg('Invalid end time');
+      return;
+    }
+    if (endDate.isBefore(startDate) || endDate.isSame(startDate)) {
+      setErrorMsg('End time must be after start time');
+      return;
+    }
+    
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setErrorMsg('You must be logged in to create events');
+      return;
+    }
+    
     const response = await fetch('/api/events', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
-        name: eventName,
-        description: description,
-        location: location,
+        name: eventName.trim(),
+        description: description.trim(),
+        location: location.trim(),
         startTime: startDate.toISOString(),
         endTime: endDate.toISOString(),
         capacity: capacity ? Number(capacity) : null,
@@ -41,12 +77,23 @@ export default function CreateEventsPage() {
     })
     if (!response.ok) {
       console.log('Failed to create event');
-      setErrorMsg(response.statusText || 'Failed to create event');
+      try {
+        const errorData = await response.json();
+        setErrorMsg(errorData.message || response.statusText || 'Failed to create event');
+      } catch {
+        setErrorMsg(response.statusText || 'Failed to create event');
+      }
       setSuccessMsg('');
     } else {
       console.log('Event created successfully');
       setSuccessMsg('Event created successfully!');
       setErrorMsg('');
+      // Reset form
+      setEventName('');
+      setDescription('');
+      setLocation('');
+      setCapacity(null);
+      setPoints(null);
     }
   }
 

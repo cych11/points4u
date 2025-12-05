@@ -71,10 +71,12 @@ export default function DisplayEventsPage() {
   // TODO: Create GET request to the fetch the events
   useEffect(() => {
     async function getEvents() {
+      const token = localStorage.getItem('token');
       const response = await fetch('/api/events', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         }
       })
       if (response.ok) {

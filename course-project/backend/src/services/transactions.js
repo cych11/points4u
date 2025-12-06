@@ -299,13 +299,35 @@ class TransactionService {
     const pagination = this.#validatePagination(page, limit);
 
     const andClauses = [];
-    if (createdBy) andClauses.push({ createdBy });
+    if (createdBy !== undefined && createdBy !== null) {
+      if (Array.isArray(createdBy)) {
+        andClauses.push({
+          OR: createdBy.map((cb) => ({
+            createdBy: {
+              contains: cb,
+            }
+          }))
+        });
+      } else {
+        andClauses.push({
+          createdBy: {
+            contains: createdBy,
+          }
+        });
+      }
+    }
+
     if (typeof suspicious === 'boolean') andClauses.push({ suspicious });
     if (type) andClauses.push({ type });
     if (relatedId !== undefined) andClauses.push({ relatedId });
-    if (amount !== undefined && operator) {
-      andClauses.push({ amount: { [operator === 'gte' ? 'gte' : 'lte']: amount } });
+
+    const amountNum = amount !== undefined && amount !== "" ? Number(amount) : undefined;
+    if (!isNaN(amountNum) && (operator === "gte" || operator === "lte")) {
+      andClauses.push({
+        amount: { [operator]: amountNum }
+      });
     }
+
 
     if (name) {
       const candidates = await prisma.user.findMany({

@@ -1,18 +1,16 @@
 import { useNavigate } from "react-router-dom";
 
-function sliceDate(date) {
-    if (!date) { return "Never"; }
-    return date.slice(0, 10);
-}
-
-export default function User({ user }) {
+export default function Promotion({ promotion }) {
     const navigate = useNavigate();
+    const endDate = new Date(promotion.endTime);
+    const endTime = endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
     return (
         <div className="flex flex-col border p-3 rounded-md justify-between">
             <div className='flex w-full justify-between'>
-                <h3 className="font-bold">{user.name} ({user.utorid})</h3>
+                <h1 className="font-semibold text-lg">{promotion.name}</h1>
                 <div className="hover:cursor-pointer hover:bg-blue-100 rounded-md p-1 items-center flex justify-center">
-                    <svg className="ml-[2px]" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" fill="#000000" version="1.1" id="Capa_1" width="17px" height="17px" viewBox="0 0 494.936 494.936" xmlSpace="preserve" onClick={() => navigate(`/managers/display-users/${user.id}`)}>
+                    <svg className="ml-[2px]" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" fill="#000000" version="1.1" id="Capa_1" width="17px" height="17px" viewBox="0 0 494.936 494.936" xmlSpace="preserve" onClick={() => navigate(`/managers/display-promotions/${promotion.id}`)}>
                         <g>
                             <g>
                                 <path d="M389.844,182.85c-6.743,0-12.21,5.467-12.21,12.21v222.968c0,23.562-19.174,42.735-42.736,42.735H67.157    c-23.562,0-42.736-19.174-42.736-42.735V150.285c0-23.562,19.174-42.735,42.736-42.735h267.741c6.743,0,12.21-5.467,12.21-12.21    s-5.467-12.21-12.21-12.21H67.157C30.126,83.13,0,113.255,0,150.285v267.743c0,37.029,30.126,67.155,67.157,67.155h267.741    c37.03,0,67.156-30.126,67.156-67.155V195.061C402.054,188.318,396.587,182.85,389.844,182.85z" />
@@ -23,11 +21,37 @@ export default function User({ user }) {
                 </div>
             </div>
 
-            <p>Email: {user.email}</p>
-            <p>Role: {user.role}</p>
-            <p>Points: {user.points}</p>
-            <p>Verified: {user.verified ? "Yes" : "No"}</p>
-            <p>Last Login: {sliceDate(user.lastLogin)}</p>
-        </div >
+            <div>
+                <p>Type: {promotion.type}</p>
+                <p>
+                    Min. Spending: {
+                        promotion.minSpending != null
+                            ? `$${Number(promotion.minSpending).toFixed(2)}`
+                            : "None"
+                    }
+                </p>
+
+
+                {(promotion.rate > 0) ? (
+                    <p>
+                        Bonus Rate: {promotion.rate}
+                    </p>
+                ) : null}
+
+                {(promotion.points > 0) ? (
+                    <p>
+                        Bonus Points: {promotion.points}
+                    </p>
+                ) : null}
+
+                <p className="text-sm mt-2">
+                    <span className="font-medium">End:</span>{" "}
+                    <span className="text-neutral-500">
+                        {endDate.toLocaleString('default', { month: 'long' })}{" "}
+                        {endDate.getDate()}, {endDate.getFullYear()} – {endTime}
+                    </span>
+                </p>
+            </div>
+        </div>
     );
 }

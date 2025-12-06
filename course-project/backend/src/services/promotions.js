@@ -18,37 +18,37 @@ class PromotionService {
   }
 
   static async createPromotion(name, description, type, startTime, endTime, minSpending, rate, points) {
-     // Check required string fields
+    // Check required string fields
     if (typeof name !== 'string' || typeof description !== 'string' || typeof type !== 'string') {
-        return { success: false, error: 'Invalid types' };
+      return { success: false, error: 'Invalid types' };
     }
 
     const normalizedType = PromotionService.#normalizeType(type);
     if (!normalizedType) {
-        return { success: false, error: 'Invalid promotion type' };
+      return { success: false, error: 'Invalid promotion type' };
     }
     // Check DateTime strings
     if (typeof startTime !== 'string' || typeof endTime !== 'string') {
-        return { success: false, error: 'Invalid date format' };
+      return { success: false, error: 'Invalid date format' };
     }
     const now = new Date();
     const start = new Date(startTime);
     const end = new Date(endTime);
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-        return { success: false, error: 'Invalid date format' };
-      }
+      return { success: false, error: 'Invalid date format' };
+    }
     if (end <= start) {
-        return { success: false, error: 'End time must be after start time' };
+      return { success: false, error: 'End time must be after start time' };
     }
     // Check optional numeric fields (only if they're provided)
     if (minSpending !== undefined && (typeof minSpending !== 'number' || minSpending <= 0)) {
-        return { success: false, error: 'minSpending must be a positive number' };
+      return { success: false, error: 'minSpending must be a positive number' };
     }
-    if (rate !== undefined && (typeof rate !== 'number' || rate <= 0)) {
-        return { success: false, error: 'rate must be a positive number' };
+    if (rate !== undefined && (typeof rate !== 'number' || rate < 0)) {
+      return { success: false, error: 'rate must be a positive number' };
     }
     if (points !== undefined && (typeof points !== 'number' || points <= 0 || !Number.isInteger(points))) {
-        return { success: false, error: 'points must be a positive integer' };
+      return { success: false, error: 'points must be a positive integer' };
     }
     const newPromotion = await prisma.promotion.create({
       data: { name, description, type: normalizedType, startTime, endTime, minSpending, rate, points }
@@ -56,52 +56,52 @@ class PromotionService {
     if (!newPromotion) return { success: false, error: 'Failed to create promotion' };
     return { success: true, promotion: newPromotion };
   }
+
   static async getPromotions(role, { name, type, page, limit, utorid, started, ended }) {
-    // Validate pagination
     if (page <= 0) return { success: false, error: 'Page must be greater than 0.' };
     if (limit <= 0) return { success: false, error: 'Limit must be greater than 0.' };
-    
-    // Validate type if provided
+
     let normalizedType;
     if (type !== undefined) {
       normalizedType = PromotionService.#normalizeType(type);
-      if (!normalizedType) {
-        return { success: false, error: 'Invalid promotion type' };
+      if (!normalizedType) return { success: false, error: 'Invalid promotion type' };
+    }
+
+    if ((role === 'manager' || role === 'superuser') && started !== undefined && ended !== undefined) {
+      return { success: false, error: 'Cannot filter by both started and ended.' };
+    }
+
+    const now = new Date();
+    const whereClause = {};
+
+    // Add/Remove filters depending on role
+    if (role === 'regular' || role === 'cashier') {
+      whereClause.startTime = { lte: now };
+      whereClause.endTime = { gte: now };
+      const usedPromotionIds = await this.getUserPromotionIds(utorid);
+      if (usedPromotionIds.length) whereClause.id = { notIn: usedPromotionIds };
+    } else {
+      const filters = [];
+
+      if (started === true) filters.push({ startTime: { lte: now } });
+      if (started === false) filters.push({ startTime: { gt: now } });
+      if (ended === true) filters.push({ endTime: { lte: now } });
+      if (ended === false) filters.push({ endTime: { gt: now } });
+
+      if (filters.length) whereClause.AND = filters;
+    }
+
+    // Common filters
+    if (name) {
+      if (Array.isArray(name)) {
+        whereClause.OR = name.map(n => ({ name: { contains: n } }));
+      } else if (typeof name === 'string') {
+        whereClause.name = { contains: name };
       }
     }
 
-    // Manager-specific validation
-    if (role === 'manager' || role === 'superuser') {
-      if (started !== undefined && ended !== undefined) {
-        return { success: false, error: 'Cannot filter by both started and ended.' };
-      }
-    }
-    
-    const now = new Date();
-    const whereClause = {};
-    
-    // Role-specific filtering
-    if (role === 'regular' || role === 'cashier') {
-      // Regular users: only active promotions
-      whereClause.startTime = { lte: now };
-      whereClause.endTime = { gte: now };
-      
-      // Exclude used promotions
-      const usedPromotionIds = await this.getUserPromotionIds(utorid);
-      whereClause.id = { notIn: usedPromotionIds };
-    } else {
-      // Managers: started/ended filters
-      if (started === true) whereClause.startTime = { lte: now };
-      if (started === false) whereClause.startTime = { gt: now };
-      if (ended === true) whereClause.endTime = { lte: now };
-      if (ended === false) whereClause.endTime = { gt: now };
-    }
-    
-    // Common filters
-    if (name) whereClause.name = name;
     if (normalizedType) whereClause.type = normalizedType;
-    
-    // Field selection based on role
+
     const selectFields = {
       id: true,
       name: true,
@@ -109,19 +109,19 @@ class PromotionService {
       endTime: true,
       minSpending: true,
       rate: true,
-      points: true
+      points: true,
     };
     if (role === 'manager' || role === 'superuser') {
-      selectFields.startTime = true;  // Only managers see startTime
+      selectFields.startTime = true;
     }
-    
-    // Query database
+
     const skip = (page - 1) * limit;
+
     const [count, results] = await Promise.all([
       prisma.promotion.count({ where: whereClause }),
-      prisma.promotion.findMany({ where: whereClause, skip, take: limit, select: selectFields })
+      prisma.promotion.findMany({ where: whereClause, skip, take: limit, select: selectFields }),
     ]);
-    
+
     return { success: true, data: { count, results } };
   }
 
@@ -131,7 +131,7 @@ class PromotionService {
       where: { utorid: utorid },
       select: { promotionIds: true }
     });
-    
+
     // Extract and flatten promotion IDs
     const allIds = [];
     for (const transaction of transactions) {
@@ -146,7 +146,7 @@ class PromotionService {
         }
       }
     }
-    
+
     // Remove duplicates and return
     return [...new Set(allIds)]
       .map((id) => {
@@ -194,16 +194,16 @@ class PromotionService {
     const id = parseInt(promotionId);
     const promotion = await prisma.promotion.findUnique({ where: { id: id } });
     if (!promotion) {
-        return { success: false, error: 'Promotion not found' };
+      return { success: false, error: 'Promotion not found' };
     }
     if (role === 'regular' || role === 'cashier') {
-        const now = new Date();
-        const isActive = promotion.startTime <= now && promotion.endTime > now;
-        if (!isActive) {
-            return { success: false, error: 'Promotion not found.' };
-        }
-        const {startTime, ...promotionWithoutStartTime} = promotion;
-        return {success: true, promotion: promotionWithoutStartTime};
+      const now = new Date();
+      const isActive = promotion.startTime <= now && promotion.endTime > now;
+      if (!isActive) {
+        return { success: false, error: 'Promotion not found.' };
+      }
+      const { startTime, ...promotionWithoutStartTime } = promotion;
+      return { success: true, promotion: promotionWithoutStartTime };
     }
     return { success: true, promotion: promotion };
   }
@@ -217,15 +217,15 @@ class PromotionService {
     const hasEnded = promotion.endTime <= now;
     const restrictedAfterStart = ['name', 'description', 'type', 'startTime', 'minSpending', 'rate', 'points'];
     if (hasStarted) {
-        const attemptingRestricted = restrictedAfterStart.some(field => updates[field] !== undefined);
-        if (attemptingRestricted) {
-            return { success: false, error: 'Cannot update these fields after promotion has started' };
-        }
+      const attemptingRestricted = restrictedAfterStart.some(field => updates[field] !== undefined);
+      if (attemptingRestricted) {
+        return { success: false, error: 'Cannot update these fields after promotion has started' };
+      }
     }
     if (hasEnded && updates.endTime !== undefined) {
-        return {success: false, error: 'Cannot update endTime after promotion has ended'};
+      return { success: false, error: 'Cannot update endTime after promotion has ended' };
     }
-    
+
     // Validate new times aren't in the past
     if (updates.type !== undefined) {
       const normalized = PromotionService.#normalizeType(updates.type);
@@ -244,7 +244,7 @@ class PromotionService {
         return { success: false, error: 'Start time cannot be in the past' };
       }
     }
-    
+
     if (updates.endTime !== undefined) {
       const newEndTime = new Date(updates.endTime);
       if (isNaN(newEndTime.getTime())) {
@@ -254,49 +254,49 @@ class PromotionService {
         return { success: false, error: 'End time cannot be in the past' };
       }
     }
-    
+
     // Validate endTime > startTime
     const finalStartTime = updates.startTime ? new Date(updates.startTime) : new Date(promotion.startTime);
     const finalEndTime = updates.endTime ? new Date(updates.endTime) : new Date(promotion.endTime);
-    
+
     if (finalEndTime <= finalStartTime) {
       return { success: false, error: 'End time must be after start time' };
     }
-    
+
     // Validate type if provided
     if (updates.type !== undefined && updates.type !== 'automatic' && updates.type !== 'onetime') {
       return { success: false, error: 'Invalid promotion type' };
     }
-    
+
     // Validate numeric fields if provided
     if (updates.minSpending !== undefined && (typeof updates.minSpending !== 'number' || updates.minSpending <= 0)) {
       return { success: false, error: 'minSpending must be a positive number' };
     }
-    if (updates.rate !== undefined && (typeof updates.rate !== 'number' || updates.rate <= 0)) {
+    if (updates.rate !== undefined && (typeof updates.rate !== 'number' || updates.rate < 0)) {
       return { success: false, error: 'rate must be a positive number' };
     }
     if (updates.points !== undefined && (typeof updates.points !== 'number' || updates.points <= 0 || !Number.isInteger(updates.points))) {
       return { success: false, error: 'points must be a positive integer' };
     }
-    
+
     // Update the promotion
     const updatedPromotion = await prisma.promotion.update({
       where: { id: id },
       data: updates
     });
-    
+
     // Build response: id, name, type + only updated fields
     const response = {
       id: updatedPromotion.id,
       name: updatedPromotion.name,
       type: updatedPromotion.type
     };
-    
+
     // Add only fields that were updated
     Object.keys(updates).forEach(key => {
       response[key] = updatedPromotion[key];
     });
-    
+
     return { success: true, promotion: response };
   }
   static async deletePromotion(promotionId) {
@@ -306,7 +306,7 @@ class PromotionService {
     const now = new Date();
     const hasStarted = promotion.startTime <= now;
     if (hasStarted) {
-        return { success: false, error: 'Cannot delete promotion that has started' };
+      return { success: false, error: 'Cannot delete promotion that has started' };
     }
     await prisma.promotion.delete({ where: { id: id } });
     return { success: true };

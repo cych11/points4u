@@ -97,8 +97,8 @@ async function main() {
       transactionData.push({
         type,
         utorid: "u001",
-        amount: 10 + i,
-        createdBy: "system",
+        spent: 10 + i,
+        createdBy: "manager1",
         remark: `${type} transaction #${i}`,
         ...extra
       })

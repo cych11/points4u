@@ -178,10 +178,16 @@ const getTransactions = async (req, res) => {
     }
   }
 
+  const createdByRaw = req.query.createdBy?.trim();
+  let createdBy;
+  if (createdByRaw !== undefined && createdByRaw !== "") {
+    createdBy = createdByRaw.split(',').map(s => s.trim()).filter(Boolean);
+  }
+
   try {
     const result = await TransactionService.listTransactions({
       name: req.query.name?.trim(),
-      createdBy: req.query.createdBy?.trim(),
+      createdBy,
       suspicious,
       promotionId,
       type,

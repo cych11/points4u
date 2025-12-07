@@ -10,7 +10,7 @@ import {
 import { useContext } from "react";
 import { PageContext } from "./contexts/PageContext.jsx";
 
-const managerEventPages = ['create-events', 'display-events', 'manage-event', 'event-users'];
+const managerEventPages = ['create-events', 'display-events', 'manage-event', 'event-users', 'promote-users'];
 
 const navLinkCSS = 'block px-4 py-2 rounded-md hover:bg-neutral-100 transition-colors cursor-pointer text-sm font-medium';
 
@@ -20,7 +20,7 @@ export default function ManagerLayout() {
   return (
     <div>
       <div className='flex p-2 border-b space-x-8 pl-6'>
-        <h2 className="flex items-center">Manager View</h2>
+        <h2 className="flex items-center">{true === true ? 'Manager View' : true === true ? 'Event Organizer View' : 'Superuser View'}</h2>
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -41,6 +41,14 @@ export default function ManagerLayout() {
                   }}>
                     View Events
                   </NavigationMenuLink>
+                  {/* {userType === 'superuser' && ( */}
+                  <NavigationMenuLink className={navLinkCSS} onClick={() => {
+                    setPage('promote-users');
+                    navigate('/managers/promote-users');
+                  }}>
+                    Promote Users
+                  </NavigationMenuLink>
+                  {/* )} */}
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>

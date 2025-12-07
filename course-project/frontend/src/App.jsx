@@ -5,6 +5,7 @@ import DisplayEventsPage from './pages/managers/display_events/page.jsx'
 import ManagerLayout from './pages/managers/layout.jsx'
 import ManageEventPage from './pages/managers/manage_event/page.jsx'
 import { PageProvider } from './pages/managers/contexts/PageContext.jsx'
+import PromoteUsersPage from './pages/managers/promote_users/page.jsx'
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
               <Route path="create-events" element={<CreateEventsPage />} />
               <Route path="display-events" element={<DisplayEventsPage />} />
               <Route path="manage-event/:id" element={<ManageEventPage />} />
+              <Route path="promote-users" element={<PromoteUsersPage />} />
             </Route>
         </Routes>
       </BrowserRouter>

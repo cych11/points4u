@@ -60,9 +60,9 @@ class EventService {
 
     const organizers = organizerIds.length
       ? await prisma.user.findMany({
-          where: { id: { in: organizerIds } },
-          select: { id: true }
-        })
+        where: { id: { in: organizerIds } },
+        select: { id: true }
+      })
       : [];
 
     if (organizers.length !== organizerIds.length) {
@@ -81,10 +81,10 @@ class EventService {
         createdById: actor.id,
         organizers: organizerIds.length
           ? {
-              createMany: {
-                data: organizerIds.map((id) => ({ userId: id }))
-              }
+            createMany: {
+              data: organizerIds.map((id) => ({ userId: id }))
             }
+          }
           : undefined
       },
       include: EVENT_INCLUDE
@@ -106,20 +106,46 @@ class EventService {
     const role = actor.role;
     const isManager = EventService.#isManager(actor);
     const publishedFilter = filters.published !== undefined ? EventService.#parseOptionalBoolean(filters.published) : undefined;
+    const whereClause = {};
+    const andFilters = [];
 
     if (publishedFilter !== undefined && !isManager) {
       throw new EventError(400, "Published filter requires manager access.");
     }
 
-    const whereClause = {
-      ...(filters.name && { name: { contains: filters.name } }),
-      ...(filters.location && { location: { contains: filters.location } })
-    };
+    // name filter
+    if (filters.name) {
+      if (Array.isArray(filters.name)) {
+        // OR across multiple name substrings
+        andFilters.push({
+          OR: filters.name.map(n => ({ name: { contains: n, mode: 'insensitive' } }))
+        });
+      } else if (typeof filters.name === 'string') {
+        andFilters.push({ name: { contains: filters.name, mode: 'insensitive' } });
+      }
+    }
 
+    // location filter
+    if (filters.location) {
+      if (Array.isArray(filters.location)) {
+        andFilters.push({
+          OR: filters.location.map(l => ({ location: { contains: l, mode: 'insensitive' } }))
+        });
+      } else if (typeof filters.location === 'string') {
+        andFilters.push({ location: { contains: filters.location, mode: 'insensitive' } });
+      }
+    }
+
+    // published: only allow manager to use publishedFilter; otherwise enforce published=true
     if (!isManager) {
-      whereClause.published = true;
+      andFilters.push({ published: true });
     } else if (publishedFilter !== undefined) {
-      whereClause.published = publishedFilter;
+      andFilters.push({ published: publishedFilter });
+    }
+
+    // finally set whereClause
+    if (andFilters.length) {
+      whereClause.AND = andFilters;
     }
 
     const baseEvents = await prisma.event.findMany({
@@ -544,9 +570,9 @@ class EventService {
   static async #loadEvent(eventId, options = { includeGuests: true }) {
     const include = options.includeGuests === false
       ? {
-          organizers: EVENT_INCLUDE.organizers,
-          awards: true
-        }
+        organizers: EVENT_INCLUDE.organizers,
+        awards: true
+      }
       : EVENT_INCLUDE;
     const event = await prisma.event.findUnique({
       where: { id: Number(eventId) },

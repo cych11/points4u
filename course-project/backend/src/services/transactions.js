@@ -328,29 +328,25 @@ class TransactionService {
       });
     }
 
-
-    if (name) {
-      const candidates = await prisma.user.findMany({
-        where: {
-          OR: [
-            { utorid: { contains: name } },
-            { name: { contains: name } }
-          ]
-        },
-        select: { utorid: true }
-      });
-      if (!candidates.length) {
-        return { count: 0, results: [] };
+    if (name !== undefined && name !== null) {    
+      const nameArray = name.split(',');
+      if (Array.isArray(nameArray)) {
+        andClauses.push({
+          OR: nameArray.map((cb) => ({
+            utorid: {
+              contains: cb,
+            }
+          }))
+        });
+      } else {
+        andClauses.push({
+          utorid: {
+            contains: name,
+          }
+        });
       }
-      const utorids = candidates.map((u) => u.utorid);
-      andClauses.push({
-        OR: [
-          { utorid: { in: utorids } },
-          { sender: { in: utorids } },
-          { recipient: { in: utorids } }
-        ]
-      });
     }
+    
 
     const where = andClauses.length ? { AND: andClauses } : {};
     const applyPromotionFilter = promotionId !== undefined;
@@ -497,7 +493,7 @@ class TransactionService {
       if (promotion.minSpending !== null && spent < promotion.minSpending) {
         throw new ServiceError(400, "Minimum spending not met for promotion");
       }
-      if (promotion.type === 'onetime' && usedPromotionIds.includes(promotion.id)) {
+      if (promotion.type === 'one-time' && usedPromotionIds.includes(promotion.id)) {
         throw new ServiceError(400, "Promotion already used");
       }
 

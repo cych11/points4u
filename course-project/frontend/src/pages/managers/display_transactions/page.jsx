@@ -47,8 +47,7 @@ export default function DisplayTransactionsPage() {
                         params.append('type', filteredType);
                     }
                 }
-                if (filteredRelatedId.length > 0) { params.append('relatedId', filteredRelatedId); }
-                
+                if (filteredRelatedId.length > 0) params.append('relatedId', filteredRelatedId.join(','));
                 if (suspiciousOnly) params.append('suspicious', 'true');
                 if (filterAmountOperator.filteredOperator !== "all") { 
                     if (filterAmountOperator.filteredAmount !== "") {

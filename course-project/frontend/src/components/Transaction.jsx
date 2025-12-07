@@ -26,6 +26,7 @@ export default function Transaction({ transaction }) {
                 {transaction.type === "adjustment" ? <p>Points Adjusted: {transaction.amount}</p> : null}
                 {transaction.type === "transfer" ? <p>Recipient: {transaction.recipient}</p> : null}
                 {transaction.type === "transfer" ? <p>Points Transferred: {transaction.amount}</p> : null}
+                {transaction.type !== "purchase" ? <p>Related ID: {transaction.relatedId}</p> : null}
 
                 <p>Remark: {transaction.remark}</p>
                 <p>Created By: {transaction.createdBy}</p>

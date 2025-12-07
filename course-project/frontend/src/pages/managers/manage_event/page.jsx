@@ -5,6 +5,15 @@ import { useContext } from "react";
 import { PageContext } from "../contexts/PageContext.jsx";
 import EventDetailsCard from "@/components/EventDetailsCard.jsx";
 import { toast } from "sonner"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose
+} from "@/components/ui/dialog"
 
 export default function ManageEventPage() {
 
@@ -27,6 +36,9 @@ export default function ManageEventPage() {
   const [organizerList, setOrganizerList] = useState([]);
   const [newOrganizerUtorid, setNewOrganizerUtorid] = useState('');
   const [newGuestUtorid, setNewGuestUtorid] = useState('');
+  const [remainingPoints, setRemainingPoints] = useState(null);
+  const [awardedPoints, setAwardedPoints] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const { id } = useParams();
 
@@ -47,6 +59,7 @@ export default function ManageEventPage() {
         setEndDate(dayjs(data.endTime) || dayjs());
         setCapacity(data.capacity || null);
         setPoints(data.pointsRemain + data.pointsAwarded || null);
+        setRemainingPoints(data.pointsRemain);
         setGuestList(data.guests || []);
         setOrganizerList(data.organizers || []);
       }
@@ -270,6 +283,50 @@ export default function ManageEventPage() {
                     className="flex items-center justify-between p-3 hover:bg-blue-50 transition duration-150"
                   >
                     <span className="text-sm truncate flex-1">{guest.utorid || guest}</span>
+                    {/* <button className='text-xs mr-1 hover:bg-gray-200 rounded-sm px-2 py-1'>points: xx</button> */}
+                    {/* {user.role === 'event organizer' && ( */}
+                    <Dialog open={open} onOpenChange={setOpen}>
+                      <DialogTrigger asChild>
+                        <button className='text-xs mr-1 hover:bg-gray-200 rounded-sm px-2 py-1'>
+                          points: xx
+                        </button>
+                      </DialogTrigger>
+
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Award {guest.utorid} points</DialogTitle>
+                          <DialogDescription>
+                            <p className='mt-2'>Current Points: {guest.points}</p>
+                            <div className='flex space-x-2 mt-2'>
+                              <p>Award Points:</p>
+                              <input
+                                type='number'
+                                min={1}
+                                max={remainingPoints}
+                                value={awardedPoints}
+                                onChange={(e) => setAwardedPoints(e.target.value)}
+                                className='border w-[70px] rounded-md p-1'
+                              />
+                            </div>
+                            <div className="flex justify-end mt-3">
+                              <button
+                                className='bg-blue-600 text-white px-3 py-1 rounded-md'
+                                onClick={() => {
+                                    if (!awardedPoints || Number(awardedPoints) <= 0) {
+                                      return;
+                                    }
+                                    setOpen(false);
+                                    setAwardedPoints(null);
+                                }}
+                              >
+                                Submit
+                              </button>
+                            </div>
+                          </DialogDescription>
+                        </DialogHeader>
+                      </DialogContent>
+                    </Dialog>
+                    // )}
                     <button
                       onClick={() => {
                         handleDeleteGuest(guest.id)

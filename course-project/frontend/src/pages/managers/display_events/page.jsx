@@ -63,12 +63,14 @@ export default function DisplayEventsPage() {
   const [endedOnly, setEndedOnly] = useState(false);
   const [showFull, setShowFull] = useState(false);
   const [eventsPerPage, setEventsPerPage] = useState(10);
+  const [isOrganizer, setIsOrganizer] = useState(true);
+  const [viewOrganizerEvents, setViewOrganizerEvents] = useState(false);
+  const [user, setUser] = useState(null);
   
   useEffect(() => {
     setPage('display-events');
   }, [setPage]);
 
-  // TODO: Create GET request to the fetch the events
   useEffect(() => {
     async function getEvents() {
       const response = await fetch('/api/events', {
@@ -117,19 +119,34 @@ export default function DisplayEventsPage() {
         if (showFull && event.numGuests < event.capacity) {
           return false;
         }
+        if (viewOrganizerEvents) {
+          // let found = false;
+          // for (let i = 0; i < event.organizers.length; i++) {
+          //   if (event.organizers[i].utorid === user.utorid) {
+          //     found = true
+          //     break;
+          //   }
+          // }
+          // if (!found) return false;
+        }
         return true;
       }));
     }
     applyFilters();
-  }, [filteredNames, filteredLocations, startedOnly, endedOnly, showFull]);
+  }, [filteredNames, filteredLocations, startedOnly, endedOnly, showFull, viewOrganizerEvents, user]);
 
   return (
     <div className="flex ml-40 mt-20">
       <div className="w-[50%]">
         <h1 className="text-3xl font-bold">Events</h1>
-        <div className="flex space-x-3 items-center mt-4">
-          <label htmlFor="events-per-page" className="text-sm font-medium">Events per page:</label>
-          <input type='number' min={1} step={1} className='border rounded-md text-sm p-1 w-[50px]' value={eventsPerPage} onChange={(e) => setEventsPerPage(e.target.value)} /> 
+        <div className="flex justify-between items-center">
+          <div className="flex space-x-3 items-center mt-4">
+            <label htmlFor="events-per-page" className="text-sm font-medium">Events per page:</label>
+            <input type='number' min={1} step={1} className='border rounded-md text-sm p-1 w-[50px]' value={eventsPerPage} onChange={(e) => setEventsPerPage(e.target.value)} />
+          </div>
+          {isOrganizer && (
+            <button className={`border rounded-lg px-3 text-sm h-[40px] hover:scale-[1.01] shadow-sm ${viewOrganizerEvents ? 'bg-blue-100' : 'hover:bg-gray-100'}`} onClick={() => setViewOrganizerEvents(!viewOrganizerEvents)}>View My Events</button>
+          )}
         </div>
         <div className='space-y-4 max-h-[580px] min-h-[580px] overflow-y-auto mt-3'>
           {filteredData.slice((currentPage - 1) * eventsPerPage, ((currentPage - 1) * eventsPerPage) + eventsPerPage).map((event) => (

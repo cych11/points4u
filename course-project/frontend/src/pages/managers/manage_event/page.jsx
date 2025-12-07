@@ -250,7 +250,49 @@ export default function ManageEventPage() {
           </div>
         </div>
         <div>
-          <h2 className="text-lg font-semibold mb-3">Guests</h2>
+          <div className='flex items-center mb-3 justify-between'>
+            <h2 className="text-lg font-semibold">Guests</h2>
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <button className='text-xs mr-1 hover:bg-gray-200 border shadow-sm rounded-sm px-2 py-1'>
+                  + Points
+                </button>
+              </DialogTrigger>
+
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Award All Guests Points</DialogTitle>
+                  <DialogDescription>
+                    <div className='flex space-x-2 mt-4'>
+                      <p>Award Points:</p>
+                      <input
+                        type='number'
+                        min={1}
+                        max={remainingPoints}
+                        value={awardedPoints}
+                        onChange={(e) => setAwardedPoints(e.target.value)}
+                        className='border w-[70px] rounded-md p-1'
+                      />
+                    </div>
+                    <div className="flex justify-end mt-3">
+                      <button
+                        className='bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700'
+                        onClick={() => {
+                            if (!awardedPoints || Number(awardedPoints) <= 0) {
+                              return;
+                            }
+                            setOpen(false);
+                            setAwardedPoints(null);
+                        }}
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          </div>
           <div className="flex gap-2 mb-4">
             <input
               type="utorid"
@@ -326,7 +368,7 @@ export default function ManageEventPage() {
                         </DialogHeader>
                       </DialogContent>
                     </Dialog>
-                    // )}
+                    {/* )} */}
                     <button
                       onClick={() => {
                         handleDeleteGuest(guest.id)

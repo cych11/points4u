@@ -10,7 +10,7 @@ import {
 import { useContext } from "react";
 import { PageContext } from "./contexts/PageContext.jsx";
 
-const managerEventPages = ['create-events', 'display-events', 'manage-event', 'event-users', 'promote-users'];
+const managerEventPages = ['create-events', 'display-events', 'manage-event', 'event-users', 'manage-permissions'];
 
 const navLinkCSS = 'block px-4 py-2 rounded-md hover:bg-neutral-100 transition-colors cursor-pointer text-sm font-medium';
 
@@ -43,8 +43,8 @@ export default function ManagerLayout() {
                   </NavigationMenuLink>
                   {/* {userType === 'superuser' && ( */}
                   <NavigationMenuLink className={navLinkCSS} onClick={() => {
-                    setPage('promote-users');
-                    navigate('/managers/promote-users');
+                    setPage('manage-permissions');
+                    navigate('/managers/manage-permissions');
                   }}>
                     Promote Users
                   </NavigationMenuLink>

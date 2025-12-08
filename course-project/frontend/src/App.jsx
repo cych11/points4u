@@ -50,7 +50,7 @@ export default function App() {
 
             {/* Manager Routes */}
             <Route path="/managers" element={<ManagerLayout />}>
-              <Route path="dashboard" element={<ManagerDashboardPage />} />
+              <Route path="" element={<ManagerDashboardPage />} />
 
               {/* Manager User Routes */}
               <Route path="display-users" element={<DisplayUsersPage />} />

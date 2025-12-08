@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/navigation-menu"
 import RoleSwitcher from "@/components/RoleSwitcher.jsx";
 
-const navLinkCSS = 'block px-4 py-2 rounded-md hover:bg-neutral-100 transition-colors cursor-pointer text-2xl font-medium';
+const navLinkCSS = 'px-4 h-[37px] flex items-center rounded-md hover:bg-neutral-100 transition-colors cursor-pointer text-xl font-medium';
 
 export default function CashierLayout() {
     const { logout } = useAuth();

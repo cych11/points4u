@@ -93,17 +93,23 @@ export const AuthProvider = ({ children }) => {
             const userRes = await fetch(`${BACKEND_URL}/users/me`, {
                 headers: { "Authorization": `Bearer ${token}` },
             });
-            
+
             if (!userRes.ok) {
                 localStorage.removeItem("token");
                 const err = await userRes.json();
                 return err.message || "Failed to fetch user data.";
             }
-            
+
             const userData = await userRes.json();
             setUser(userData); // update user context (response is user object directly)
 
-            navigate("/managers/dashboard");
+            if (userData.role === 'cashier') {
+                navigate("/cashier");
+            } else if (userData.role === 'manager' || userData.role === 'superuser') {
+                navigate("/managers/dashboard");
+            } else {
+                navigate("/user");
+            }
         } catch (error) {
             setUser(null);
             return error.message || "An error occurred during login.";

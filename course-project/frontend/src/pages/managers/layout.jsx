@@ -8,6 +8,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
+import RoleSwitcher from "@/components/RoleSwitcher.jsx";
 
 const eventPages = ['create-events', 'display-events', 'manage-event', 'event-users'];
 const navLinkCSS = 'block px-4 py-2 rounded-md hover:bg-neutral-100 transition-colors cursor-pointer text-2xl font-medium';
@@ -20,6 +21,9 @@ export default function ManagerLayout() {
 
   return (
     <div>
+      <div className="bg-gray-50 border-b py-2">
+        <RoleSwitcher />
+      </div>
       <div className='flex p-2 border-b space-x-8 pl-6 text-3xl'>
         <h2 className="flex items-center">Manager View</h2>
 
@@ -72,6 +76,16 @@ export default function ManagerLayout() {
                 onClick={() => navigate('/managers/display-events')}
               >
                 Events
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+
+            {/* Profile */}
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                className={`${navLinkCSS} ${active === 'profile' ? "bg-blue-100 text-blue-900" : ""}`}
+                onClick={() => navigate('/user/profile')}
+              >
+                Profile
               </NavigationMenuLink>
             </NavigationMenuItem>
 

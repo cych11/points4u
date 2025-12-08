@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { useContext, useEffect, useState } from "react";
 import { PageContext } from "../contexts/PageContext";
+import { useAuth } from "../../../contexts/AuthContext";
 import Pagination from "@mui/material/Pagination";
 import EventFilter from "@/components/EventFilter.jsx";
 import FilterCheckBox from "@/components/FilterCheckBox";
@@ -9,6 +10,7 @@ import Promotion from "@/components/Promotion.jsx";
 
 export default function DisplayPromotionsPage() {
     const { setPage } = useContext(PageContext);
+    const { user } = useAuth();
 
     const [currentPage, setCurrentPage] = useState(1);
     const [promotionsPerPage, setPromotionsPerPage] = useState(10);
@@ -87,12 +89,14 @@ export default function DisplayPromotionsPage() {
             <div className="w-[50%]">
                 <div className="flex justify-between">
                     <h1 className="text-3xl font-bold">Promotions</h1>
-                    <a
-                        className="flex flex-col border rounded-md p-2 transition-all duration-150 ease-in-out hover:scale-110 hover:bg-blue-100"
-                        href="/managers/create-promotions"
-                    >
-                        <h1 className="font-semibold text-2xl">Create Promotion</h1>
-                    </a>
+                    {(user?.role === 'manager' || user?.role === 'superuser') && (
+                        <a
+                            className="flex flex-col border rounded-md p-2 transition-all duration-150 ease-in-out hover:scale-110 hover:bg-blue-100"
+                            href="/managers/create-promotions"
+                        >
+                            <h1 className="font-semibold text-2xl">Create Promotion</h1>
+                        </a>
+                    )}
                 </div>
                 <div className="flex space-x-3 items-center mt-4">
                     <label htmlFor="promotions-per-page" className="text-sm font-medium">Promotions per page:</label>

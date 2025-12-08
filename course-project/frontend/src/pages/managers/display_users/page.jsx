@@ -73,7 +73,15 @@ export default function DisplayUsersPage() {
         <div className="flex ml-40 mt-5">
             {/* Users list */}
             <div className="w-[50%]">
-                <h1 className="text-3xl font-bold">Users</h1>
+                <div className="flex justify-between items-center">
+                    <h1 className="text-3xl font-bold">Users</h1>
+                    <a
+                        href="/cashier/create-user"
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm text-sm"
+                    >
+                        + Create New User
+                    </a>
+                </div>
 
                 {/* Users per page */}
                 <div className="flex space-x-3 items-center mt-4">

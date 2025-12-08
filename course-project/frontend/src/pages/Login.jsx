@@ -14,7 +14,7 @@ function Login() {
         e.preventDefault();
         setError("");
         setIsLoading(true);
-        
+
         try {
             const errorMessage = await login(utorid, password);
             if (errorMessage) {
@@ -46,8 +46,8 @@ function Login() {
                     <form onSubmit={handle_submit} className="space-y-5">
                         {/* UTORid Input */}
                         <div className="space-y-2">
-                            <label 
-                                htmlFor="utorid" 
+                            <label
+                                htmlFor="utorid"
                                 className="text-sm font-medium text-foreground"
                             >
                                 UTORid
@@ -67,8 +67,8 @@ function Login() {
 
                         {/* Password Input */}
                         <div className="space-y-2">
-                            <label 
-                                htmlFor="password" 
+                            <label
+                                htmlFor="password"
                                 className="text-sm font-medium text-foreground"
                             >
                                 Password
@@ -86,6 +86,12 @@ function Login() {
                             />
                         </div>
 
+                        <div className="flex justify-end">
+                            <Link to="/forgot-password" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+                                Forgot password?
+                            </Link>
+                        </div>
+
                         {/* Error Message */}
                         {error && (
                             <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
@@ -94,8 +100,8 @@ function Login() {
                         )}
 
                         {/* Submit Button */}
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             disabled={isLoading}
                             className="w-full py-3 px-4 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                         >
@@ -117,8 +123,8 @@ function Login() {
                     <div className="text-center pt-4 border-t border-border">
                         <p className="text-sm text-muted-foreground">
                             Don't have an account?{' '}
-                            <Link 
-                                to="/register" 
+                            <Link
+                                to="/register"
                                 className="font-medium text-primary hover:text-primary/80 transition-colors"
                             >
                                 Sign up

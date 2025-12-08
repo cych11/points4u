@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useContext } from "react";
 import { PageContext } from "../contexts/PageContext.jsx";
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../../../contexts/AuthContext.jsx";
 
 function CheckVerified({ boolean, trueMessage, falseMessage }) {
     return boolean ? (
@@ -13,6 +14,7 @@ function CheckVerified({ boolean, trueMessage, falseMessage }) {
 }
 
 export default function EditUserPage() {
+    const { user: currentUser } = useAuth();
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -114,11 +116,10 @@ export default function EditUserPage() {
         }
     }
 
-    async function toggleRole() {
+    async function changeRole(newRole) {
         const token = localStorage.getItem("token");
 
         try {
-            const newRole = (role === "regular") ? "cashier" : "regular";
             const response = await fetch(`/api/users/${id}`, {
                 method: "PATCH",
                 headers: {
@@ -133,6 +134,7 @@ export default function EditUserPage() {
             if (!response.ok) {
                 const errorData = await response.json();
                 console.log("Failed to update role:", errorData);
+                alert(`Failed to update role: ${errorData.message}`);
                 return;
             }
 
@@ -306,18 +308,32 @@ export default function EditUserPage() {
                 <div className="flex border p-3 rounded-md items-center justify-between">
                     <div>
                         <h3 className="font-bold">Change Role</h3>
-                        <p>Promote customers to cashiers, or vice versa</p>
+                        <p>Assign a new role to this user</p>
                     </div>
-                    <div
-                        className={`flex text-xl font-semibold p-1 rounded-md items-center justify-center 
-                            ${(role === "manager" || role === "superuser") ? 'cursor-not-allowed bg-red-200' : 'cursor-pointer bg-neutral-300'}`}
-                        onClick={() => {
-                            if (role !== "manager" && role !== "superuser") toggleRole();
-                        }}
-                    >
-                        <span className="p-2 rounded-md">
-                            {(role !== "manager" && role !== "superuser") ? "Change Role" : "Cannot Change Role"}
-                        </span>
+                    <div>
+                        <select
+                            value={role}
+                            onChange={(e) => changeRole(e.target.value)}
+                            // Disable rule:
+                            // 1. If target is Superuser, ONLY Superuser can edit (and even then, usually self-demotion is risky, but allowed here).
+                            // 2. If target is Manager, ONLY Superuser can edit.
+                            // 3. If I am Manager, I can ONLY edit Casher/Regular.
+                            disabled={
+                                (role === 'superuser' && currentUser?.role !== 'superuser') ||
+                                (role === 'manager' && currentUser?.role !== 'superuser')
+                            }
+                            className="bg-neutral-300 p-2 rounded-md font-semibold cursor-pointer outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <option value="regular">Regular</option>
+                            <option value="cashier">Cashier</option>
+                            {/* Only Superusers can promote people to Manager/Superuser, or demote Managers/Superusers */}
+                            {currentUser?.role === 'superuser' && (
+                                <>
+                                    <option value="manager">Manager</option>
+                                    <option value="superuser">Superuser</option>
+                                </>
+                            )}
+                        </select>
                     </div>
                 </div>
             </div>

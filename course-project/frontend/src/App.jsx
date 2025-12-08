@@ -21,6 +21,7 @@ import DisplayEventsPage from './pages/managers/display_events/page.jsx'
 import ManageEventPage from './pages/managers/manage_event/page.jsx'
 
 import { PageProvider } from './pages/managers/contexts/PageContext.jsx'
+<<<<<<< HEAD
 import { AuthProvider } from './contexts/AuthContext.jsx'
 
 // Helper Components
@@ -35,6 +36,9 @@ import UserProfilePage from './pages/user/profile/page.jsx'
 import ForgotPasswordPage from './pages/forgot_password/page.jsx'
 import ResetPasswordPage from './pages/reset_password/page.jsx'
 
+=======
+import ManagePermissionsPage from './pages/managers/manage-permissions/page.jsx'
+>>>>>>> p4
 
 export default function App() {
   return (
@@ -68,6 +72,7 @@ export default function App() {
               <Route path="create-events" element={<CreateEventsPage />} />
               <Route path="display-events" element={<DisplayEventsPage />} />
               <Route path="manage-event/:id" element={<ManageEventPage />} />
+              <Route path="manage-permissions" element={<ManagePermissionsPage />} />
             </Route>
 
             {/* Cashier Routes */}

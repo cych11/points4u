@@ -9,12 +9,15 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
 import RoleSwitcher from "@/components/RoleSwitcher.jsx";
+import { useContext } from "react";
+import { PageContext } from "./contexts/PageContext.jsx";
 
-const eventPages = ['create-events', 'display-events', 'manage-event', 'event-users'];
+const eventPages = ['create-events', 'display-events', 'manage-event', 'event-users', 'manage-permissions'];
 const navLinkCSS = 'block px-4 py-2 rounded-md hover:bg-neutral-100 transition-colors cursor-pointer text-2xl font-medium';
 
 export default function ManagerLayout() {
   const { user, logout } = useAuth();
+  const { page, setPage } = useContext(PageContext);
   const navigate = useNavigate();
   const location = useLocation();
   const active = location.pathname.split("/").pop();
@@ -25,7 +28,7 @@ export default function ManagerLayout() {
         <RoleSwitcher />
       </div>
       <div className='flex p-2 border-b space-x-8 pl-6 text-3xl'>
-        <h2 className="flex items-center">Manager View</h2>
+        <h2 className="flex items-center">{true === true ? 'Manager View' : true === true ? 'Event Organizer View' : 'Superuser View'}</h2>
 
         <NavigationMenu>
           <NavigationMenuList>
@@ -81,22 +84,25 @@ export default function ManagerLayout() {
 
             {/* Profile */}
             <NavigationMenuItem>
-              <NavigationMenuLink
-                className={`${navLinkCSS} ${active === 'profile' ? "bg-blue-100 text-blue-900" : ""}`}
-                onClick={() => navigate('/user/profile')}
-              >
-                Profile
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-
-            {/* Logout */}
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                className={`${navLinkCSS}`}
-                onClick={logout}
-              >
-                Logout
-              </NavigationMenuLink>
+              <NavigationMenuTrigger className={`px-4 rounded-md transition-colors ${eventPages.includes(page) ? 'bg-blue-100 text-blue-900' : 'hover:bg-neutral-50'}`}>
+                {page === 'create-events' ? 'Create Event' : page === 'display-events' ? 'Event Display' : page === 'manage-event' ? 'Manage Event' : page === 'event-users' ? 'Event Users' : 'Events'}
+              </NavigationMenuTrigger>
+              <NavigationMenuContent className="w-[300px]">
+                <div className="p-2 whitespace-nowrap">
+                  <NavigationMenuLink className={navLinkCSS} onClick={() => {
+                    setPage('create-events');
+                    navigate('/managers/create-events');
+                  }}>
+                    Create Event
+                  </NavigationMenuLink>
+                  <NavigationMenuLink className={navLinkCSS} onClick={() => {
+                    setPage('display-events');
+                    navigate('/managers/display-events');
+                  }}>
+                    View Events
+                  </NavigationMenuLink>
+                </div>
+              </NavigationMenuContent>
             </NavigationMenuItem>
 
           </NavigationMenuList>

@@ -19,12 +19,8 @@ export default function CashierLayout() {
 
     return (
         <div>
-            <div className="bg-gray-50 border-b py-2">
-                <RoleSwitcher />
-            </div>
             <div className='flex p-2 border-b space-x-8 pl-6 text-3xl'>
                 <h2 className="flex items-center">Cashier View</h2>
-
                 <NavigationMenu>
                     <NavigationMenuList>
                         {/* Dashboard */}
@@ -60,7 +56,7 @@ export default function CashierLayout() {
                         {/* Create User */}
                         <NavigationMenuItem>
                             <NavigationMenuLink
-                                className={`${navLinkCSS} ${active === 'create-user' ? "bg-blue-100 text-blue-900" : ""}`}
+                                className={`${navLinkCSS} whitespace-nowrap ${active === 'create-user' ? "bg-blue-100 text-blue-900" : ""}`}
                                 onClick={() => navigate('/cashier/create-user')}
                             >
                                 Create User
@@ -99,6 +95,9 @@ export default function CashierLayout() {
 
                     </NavigationMenuList>
                 </NavigationMenu>
+                <div className='flex items-center flex-1 justify-end pr-12'>
+                    <RoleSwitcher />
+                </div>
             </div>
 
             <main>

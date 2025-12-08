@@ -34,7 +34,7 @@ export default function RoleSwitcher() {
         }`;
 
     return (
-        <div className="flex gap-2 mb-4 justify-center print:hidden">
+        <div className="flex gap-2 justify-center print:hidden">
             {showManager && (
                 <button
                     onClick={() => navigate('/managers/dashboard')}

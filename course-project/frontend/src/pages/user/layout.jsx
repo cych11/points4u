@@ -19,12 +19,8 @@ export default function UserLayout() {
 
     return (
         <div>
-            <div className="bg-gray-50 border-b py-2">
-                <RoleSwitcher />
-            </div>
             <div className='flex p-2 border-b space-x-8 pl-6 text-3xl'>
                 <h2 className="flex items-center">User View</h2>
-
                 <NavigationMenu>
                     <NavigationMenuList>
                         {/* Dashboard */}
@@ -89,6 +85,9 @@ export default function UserLayout() {
 
                     </NavigationMenuList>
                 </NavigationMenu>
+                <div className='flex items-center flex-1 justify-end pr-12'>
+                    <RoleSwitcher />
+                </div>
             </div>
 
             <main>

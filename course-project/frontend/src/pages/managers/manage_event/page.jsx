@@ -122,13 +122,18 @@ export default function ManageEventPage() {
 
   async function handleAddGuestPoints(utorid, points) {
     const token = localStorage.getItem('token');
-    const response = await fetch(`/api/users/${utorid}/addPoints`, {
-      method: 'PATCH',
+    const response = await fetch(`/api/events/${id}/points`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ points: points })
+      body: JSON.stringify({
+        type: "event",
+        utorid: utorid,
+        amount: Number(points),
+        remark: null
+      })
     });
     if (!response.ok) {
       toast("Failed to add points", {
@@ -138,8 +143,35 @@ export default function ManageEventPage() {
           onClick: () => console.log("Failed to add points"),
         },
       });
+      return null;
     }
     return await response.json()
+  }
+
+  async function addPointsToAllGuests(points) {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`/api/events/${id}/points`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ 
+        type: "event",
+        amount: Number(points),
+        remark: null 
+      })
+    });
+    if (!response.ok) {
+      toast("Failed to add points", {
+        description: "There was an error adding points",
+        action: {
+          label: "Ok",
+          onClick: () => console.log("Failed to add points"),
+        },
+      });
+      return null;
+    }
   }
 
   async function handleAddedGuest(utorid) {
@@ -337,6 +369,7 @@ export default function ManageEventPage() {
                             if (!awardedPoints || Number(awardedPoints) <= 0) {
                               return;
                             }
+                            addPointsToAllGuests(awardedPoints);
                             setOpen(false);
                             setAwardedPoints(null);
                         }}

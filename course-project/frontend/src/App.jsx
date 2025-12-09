@@ -35,6 +35,7 @@ import UserEventsPage from './pages/user/events/page.jsx'
 import UserProfilePage from './pages/user/profile/page.jsx'
 import ForgotPasswordPage from './pages/forgot_password/page.jsx'
 import ResetPasswordPage from './pages/reset_password/page.jsx'
+import RolePermission from './components/RolePermission.jsx'
 
 
 export default function App() {
@@ -49,36 +50,38 @@ export default function App() {
             <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
             {/* Manager Routes */}
-            <Route path="/managers" element={<ManagerLayout />}>
-              <Route path="" element={<ManagerDashboardPage />} />
+            <Route element={<RolePermission roles={['manager', 'superuser']} />}>
+              <Route path="/managers" element={<ManagerLayout />}>
+                <Route path="" element={<ManagerDashboardPage />} />
 
-              {/* Manager User Routes */}
-              <Route path="display-users" element={<DisplayUsersPage />} />
-              <Route path="display-users/:id" element={<EditUserPage />} />
+                <Route path="display-users" element={<DisplayUsersPage />} />
+                <Route path="display-users/:id" element={<EditUserPage />} />
 
-              {/* Manager Transaction Routes */}
-              <Route path="display-transactions" element={<DisplayTransactionsPage />} />
-              <Route path="display-transactions/:id" element={<EditTransactionPage />} />
+                <Route path="display-transactions" element={<DisplayTransactionsPage />} />
+                <Route path="display-transactions/:id" element={<EditTransactionPage />} />
 
-              {/* Manager Promotion Routes */}
-              <Route path="create-promotions" element={<CreatePromotionsPage />} />
-              <Route path="display-promotions" element={<DisplayPromotionsPage />} />
-              <Route path="display-promotions/:id" element={<ManagePromotionPage />} />
+                <Route path="create-promotions" element={<CreatePromotionsPage />} />
+                <Route path="display-promotions" element={<DisplayPromotionsPage />} />
+                <Route path="display-promotions/:id" element={<ManagePromotionPage />} />
 
-              {/* Manager Event Routes */}
-              <Route path="create-events" element={<CreateEventsPage />} />
-              <Route path="display-events" element={<DisplayEventsPage />} />
-              <Route path="manage-event/:id" element={<ManageEventPage />} />
-              <Route path="manage-permissions" element={<ManagePermissionsPage />} />
+                <Route path="create-events" element={<CreateEventsPage />} />
+                <Route path="display-events" element={<DisplayEventsPage />} />
+                <Route path="manage-event/:id" element={<ManageEventPage />} />
+                <Route element={<RolePermission roles={['superuser']} />}>
+                  <Route path="manage-permissions" element={<ManagePermissionsPage />} />
+                </Route>
+              </Route>
             </Route>
 
             {/* Cashier Routes */}
-            <Route path="/cashier" element={<CashierLayout />}>
-              <Route index element={<CashierHomePage />} />
-              <Route path="create-transaction" element={<CreateTransactionPage />} />
-              <Route path="process-redemption" element={<ProcessRedemptionPage />} />
-              <Route path="create-user" element={<CreateUserPage />} />
-              <Route path="promotions" element={<DisplayPromotionsPage />} />
+            <Route element={<RolePermission roles={['cashier', 'manager', 'superuser']} />}>
+              <Route path="/cashier" element={<CashierLayout />}>
+                <Route index element={<CashierHomePage />} />
+                <Route path="create-transaction" element={<CreateTransactionPage />} />
+                <Route path="process-redemption" element={<ProcessRedemptionPage />} />
+                <Route path="create-user" element={<CreateUserPage />} />
+                <Route path="promotions" element={<DisplayPromotionsPage />} />
+              </Route>
             </Route>
 
             {/* User Routes */}

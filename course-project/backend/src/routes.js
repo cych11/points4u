@@ -9,7 +9,8 @@ const {
     updateUserController,
     updateSelfController,
     getSelfController,
-    updateOwnPasswordController
+    updateOwnPasswordController,
+    addUserPointsController
 } = require("./controllers/users");
 
 const {
@@ -61,6 +62,7 @@ router.get("/users/me/transactions", auth, getOwnTransactionsController);
 router.get("/users/:userId", auth, getUserByIdController);
 router.patch("/users/:userId", auth, updateUserController);
 router.post("/users/:userId/transactions", auth, createUserTransactionController);
+router.patch("/users/:userId/addPoints", auth, addUserPointsController);
 
 // promotions
 router.post("/promotions", auth, createPromotionController);

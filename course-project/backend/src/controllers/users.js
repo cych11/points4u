@@ -321,6 +321,24 @@ const updateUserController = async (req, res) => {
   }
 };
 
+const addUserPointsController = async (req, res) => {
+  if (!ensureRole(req.user.role, ['manager', 'superuser'])) {
+    return res.status(403).json({ message: "Insufficient permission to perform this action." });
+  }
+  const { userId } = req.params;
+  const pointsToAdd = Number(req.body.points);
+  if (!Number.isInteger(pointsToAdd) || pointsToAdd <= 0) {
+    return res.status(400).json({ message: "Points must be a positive integer" });
+  }
+  try {
+    const updatedUser = await UserService.addPoints(userId, pointsToAdd);
+    return res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   createUserController,
   listUsersController,
@@ -328,5 +346,6 @@ module.exports = {
   updateUserController,
   updateSelfController,
   getSelfController,
-  updateOwnPasswordController
+  updateOwnPasswordController,
+  addUserPointsController
 };

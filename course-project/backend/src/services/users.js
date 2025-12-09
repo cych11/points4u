@@ -142,6 +142,10 @@ class UserService {
     });
   }
 
+  static async addPoints(utorid, points) {
+    return await prisma.user.update({ where: { utorid }, data: { points: { increment: points } } });
+  }
+
   static async getAvailablePromotions(utorid) {
     const promotions = await PromotionService.getAvailableOnetimePromotions(utorid);
     return promotions;

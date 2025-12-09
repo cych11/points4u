@@ -82,8 +82,8 @@ export default function DisplayEventsPage() {
         }
       })
       if (response.ok) {
-        // const data = await response.json();
-        // setFilteredData(data);
+        const data = await response.json();
+        setFilteredData(data.results);
       } else {
         console.log('Failed to fetch events');
       }

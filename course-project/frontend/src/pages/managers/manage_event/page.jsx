@@ -39,8 +39,30 @@ export default function ManageEventPage() {
   const [remainingPoints, setRemainingPoints] = useState(null);
   const [awardedPoints, setAwardedPoints] = useState(null);
   const [open, setOpen] = useState(false);
+  const [currUser, setCurrUser] = useState(null);
 
   const { id } = useParams();
+
+  useEffect(() => {
+    if (!open || !currUser) return;
+    async function openDialog() {
+      if (currUser) {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/users/${currUser.utorid}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (response.ok) {
+          const result = await response.json();
+          setCurrUser(result)
+        }
+      }
+    }
+    openDialog()
+  }, [open])
 
   useEffect(() => {
     async function getEventDetails() {
@@ -96,6 +118,28 @@ export default function ManageEventPage() {
       setSuccessMsg('Event modified successfully!');
       setErrorMsg('');
     }
+  }
+
+  async function handleAddGuestPoints(utorid, points) {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`/api/users/${utorid}/addPoints`, {
+      method: 'PATCH',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ points: points })
+    });
+    if (!response.ok) {
+      toast("Failed to add points", {
+        description: "There was an error adding points",
+        action: {
+          label: "Ok",
+          onClick: () => console.log("Failed to add points"),
+        },
+      });
+    }
+    return await response.json()
   }
 
   async function handleAddedGuest(utorid) {
@@ -340,17 +384,19 @@ export default function ManageEventPage() {
                     {/* <button className='text-xs mr-1 hover:bg-gray-200 rounded-sm px-2 py-1'>points: xx</button> */}
                     {/* {user.role === 'event organizer' && ( */}
                     <Dialog open={open} onOpenChange={setOpen}>
-                      <DialogTrigger asChild>
-                        <button className='text-xs mr-1 hover:bg-gray-200 rounded-sm px-2 py-1'>
-                          points: xx
+                      <DialogTrigger 
+                        asChild
+                        onClick={() => setCurrUser(guest)}
+                      >
+                        <button className='text-xs mr-1 hover:bg-gray-200 rounded-sm px-2 py-1 border'>
+                          points
                         </button>
                       </DialogTrigger>
-
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle>Award {guest.utorid} points</DialogTitle>
+                          <DialogTitle>Award {currUser.utorid} points</DialogTitle>
                           <DialogDescription>
-                            <p className='mt-2'>Current Points: {guest.points}</p>
+                            <p className='mt-2'>Current Points: {currUser.points}</p>
                             <div className='flex space-x-2 mt-2'>
                               <p>Award Points:</p>
                               <input
@@ -369,6 +415,7 @@ export default function ManageEventPage() {
                                     if (!awardedPoints || Number(awardedPoints) <= 0) {
                                       return;
                                     }
+                                    handleAddGuestPoints(currUser.utorid, awardedPoints);
                                     setOpen(false);
                                     setAwardedPoints(null);
                                 }}

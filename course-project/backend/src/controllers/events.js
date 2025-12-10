@@ -29,15 +29,15 @@ const createEventController = async (req, res) => {
 const listEventsController = async (req, res) => {
   try {
     const filters = {
-      name: req.query.name?.trim(),
-      location: req.query.location?.trim(),
-      started: parseQueryBoolean(req.query.started),
-      ended: parseQueryBoolean(req.query.ended),
-      full: parseQueryBoolean(req.query.full),
-      showFull: parseQueryBoolean(req.query.showFull),
-      published: parseQueryBoolean(req.query.published),
-      page: req.query.page !== undefined ? Number(req.query.page) : undefined,
-      limit: req.query.limit !== undefined ? Number(req.query.limit) : undefined
+      name: req.query.name?.trim() || undefined,
+      location: req.query.location?.trim() || undefined,
+      started: req.query.started ? parseQueryBoolean(req.query.started) : undefined,
+      ended: req.query.ended ? parseQueryBoolean(req.query.ended) : undefined,
+      full: req.query.full ? parseQueryBoolean(req.query.full) : undefined,
+      showFull: req.query.showFull ? parseQueryBoolean(req.query.showFull) : undefined,
+      published: req.query.published ? parseQueryBoolean(req.query.published) : undefined,
+      page: req.query.page ? Number(req.query.page) : undefined,
+      limit: req.query.limit ? Number(req.query.limit) : undefined
     };
     const events = await EventService.listEvents(req.user, filters);
     res.status(200).json(events);

@@ -173,7 +173,7 @@ class EventService {
 
     const totalCount = filteredByTime.length;
     const startIndex = (page - 1) * limit;
-    const paginated = finalEvents.slice(startIndex, startIndex + limit);
+    const paginated = finalEvents;
 
     const results = paginated.map((event) =>
       isManager

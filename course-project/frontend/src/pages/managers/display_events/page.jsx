@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import EventFilter from "@/components/EventFilter.jsx";
 import FilterCheckBox from "@/components/FilterCheckBox";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const mock_data = [
   {
@@ -55,6 +56,7 @@ const mock_data = [
 
 export default function DisplayEventsPage() {
   const { setPage } = useContext(PageContext);
+  const { user } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredData, setFilteredData] = useState(mock_data);
   const [filteredNames, setFilteredNames] = useState([]);
@@ -63,9 +65,7 @@ export default function DisplayEventsPage() {
   const [endedOnly, setEndedOnly] = useState(false);
   const [showFull, setShowFull] = useState(false);
   const [eventsPerPage, setEventsPerPage] = useState(10);
-  const [isOrganizer, setIsOrganizer] = useState(true);
   const [viewOrganizerEvents, setViewOrganizerEvents] = useState(false);
-  const [user, setUser] = useState(null);
   
   useEffect(() => {
     setPage('display-events');
@@ -80,16 +80,19 @@ export default function DisplayEventsPage() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         }
-      })
+      });
+
+      const body = await response.json();
+
       if (response.ok) {
-        const data = await response.json();
-        setFilteredData(data.results);
+        console.log(body);
+        setFilteredData(body.results);
       } else {
-        console.log('Failed to fetch events');
+        console.log('Failed to fetch events', body);
       }
     }
     getEvents();
-  })
+  }, []);
 
   useEffect(() => {
     function applyFilters() {
@@ -122,14 +125,14 @@ export default function DisplayEventsPage() {
           return false;
         }
         if (viewOrganizerEvents) {
-          // let found = false;
-          // for (let i = 0; i < event.organizers.length; i++) {
-          //   if (event.organizers[i].utorid === user.utorid) {
-          //     found = true
-          //     break;
-          //   }
-          // }
-          // if (!found) return false;
+          let found = false;
+          for (let i = 0; i < event.organizers.length; i++) {
+            if (event.organizers[i].utorid === user.utorid) {
+              found = true
+              break;
+            }
+          }
+          if (!found) return false;
         }
         return true;
       }));
@@ -146,9 +149,7 @@ export default function DisplayEventsPage() {
             <label htmlFor="events-per-page" className="text-sm font-medium">Events per page:</label>
             <input type='number' min={1} step={1} className='border rounded-md text-sm p-1 w-[50px]' value={eventsPerPage} onChange={(e) => setEventsPerPage(e.target.value)} />
           </div>
-          {isOrganizer && (
-            <button className={`border rounded-lg px-3 text-sm h-[40px] hover:scale-[1.01] shadow-sm ${viewOrganizerEvents ? 'bg-blue-100' : 'hover:bg-gray-100'}`} onClick={() => setViewOrganizerEvents(!viewOrganizerEvents)}>View My Events</button>
-          )}
+          <button className={`border rounded-lg px-3 text-sm h-[40px] hover:scale-[1.01] shadow-sm ${viewOrganizerEvents ? 'bg-blue-100' : 'hover:bg-gray-100'}`} onClick={() => setViewOrganizerEvents(!viewOrganizerEvents)}>View My Events</button>
         </div>
         <div className='space-y-4 max-h-[580px] min-h-[580px] overflow-y-auto mt-3'>
           {filteredData.slice((currentPage - 1) * eventsPerPage, ((currentPage - 1) * eventsPerPage) + eventsPerPage).map((event) => (

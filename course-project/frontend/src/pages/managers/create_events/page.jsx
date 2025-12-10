@@ -38,6 +38,9 @@ export default function CreateEventsPage() {
       setErrorMsg('Location is required');
       return;
     }
+    if (!points) {
+      return;
+    }
     
     // Validate dates
     if (!startDate || !startDate.isValid()) {
@@ -72,7 +75,7 @@ export default function CreateEventsPage() {
         startTime: startDate.toISOString(),
         endTime: endDate.toISOString(),
         capacity: capacity ? Number(capacity) : null,
-        points: points ? Number(points) : null
+        points: Number(points)
       })
     })
     if (!response.ok) {

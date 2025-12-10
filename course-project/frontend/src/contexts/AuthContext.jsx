@@ -16,6 +16,7 @@ const BACKEND_URL = "/api";
 export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     // Check token and fetch user on mount
     useEffect(() => {
@@ -45,6 +46,8 @@ export const AuthProvider = ({ children }) => {
             } catch {
                 localStorage.removeItem("token");
                 setUser(null);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -150,7 +153,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, register }}>
+        <AuthContext.Provider value={{ user, login, logout, register, loading }}>
             {children}
         </AuthContext.Provider>
     );

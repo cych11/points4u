@@ -37,32 +37,39 @@ export default function ManageEventPage() {
   const [newOrganizerUtorid, setNewOrganizerUtorid] = useState('');
   const [newGuestUtorid, setNewGuestUtorid] = useState('');
   const [remainingPoints, setRemainingPoints] = useState(null);
-  const [awardedPoints, setAwardedPoints] = useState(null);
-  const [open, setOpen] = useState(false);
+  const [awardedPointsAll, setAwardedPointsAll] = useState('');
+  const [awardedPointsGuest, setAwardedPointsGuest] = useState('');
+  const [openAll, setOpenAll] = useState(false);
+  const [openGuest, setOpenGuest] = useState(false);
   const [currUser, setCurrUser] = useState(null);
 
   const { id } = useParams();
 
   useEffect(() => {
-    if (!open || !currUser) return;
+    // Only fetch full user details when guest dialog is opened and we have a numeric id
+    if (!openGuest || !currUser?.id) return;
     async function openDialog() {
-      if (currUser) {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`/api/users/${currUser.utorid}`, {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`/api/users/${currUser.id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           }
         });
+        const body = await response.json().catch(() => null);
         if (response.ok) {
-          const result = await response.json();
-          setCurrUser(result)
+          setCurrUser(body);
+        } else {
+          console.warn('Failed to fetch user details', response.status, body);
         }
+      } catch (err) {
+        console.error('Failed to fetch user details', err);
       }
     }
     openDialog()
-  }, [open])
+  }, [openGuest, currUser?.id])
 
   useEffect(() => {
     async function getEventDetails() {
@@ -121,6 +128,13 @@ export default function ManageEventPage() {
   }
 
   async function handleAddGuestPoints(utorid, points) {
+    if (!utorid || typeof utorid !== 'string') {
+      toast("Error", {
+        description: "Invalid user selected",
+        action: { label: "Ok", onClick: () => {} },
+      });
+      return null;
+    }
     const token = localStorage.getItem('token');
     const response = await fetch(`/api/events/${id}/points`, {
       method: "POST",
@@ -130,14 +144,16 @@ export default function ManageEventPage() {
       },
       body: JSON.stringify({
         type: "event",
-        utorid: utorid,
+        utorid: utorid.trim(),
         amount: Number(points),
         remark: null
       })
     });
     if (!response.ok) {
+      const body = await response.json().catch(() => null);
+      const errorMsg = body?.message || `Failed to add points (${response.status})`;
       toast("Failed to add points", {
-        description: "There was an error adding points",
+        description: errorMsg,
         action: {
           label: "Ok",
           onClick: () => console.log("Failed to add points"),
@@ -145,6 +161,10 @@ export default function ManageEventPage() {
       });
       return null;
     }
+    toast("Success", {
+      description: "Points awarded successfully",
+      action: { label: "Ok", onClick: () => {} },
+    });
     return await response.json()
   }
 
@@ -340,7 +360,7 @@ export default function ManageEventPage() {
         <div>
           <div className='flex items-center mb-3 justify-between'>
             <h2 className="text-lg font-semibold">Guests</h2>
-            <Dialog open={open} onOpenChange={setOpen}>
+            <Dialog open={openAll} onOpenChange={setOpenAll}>
               <DialogTrigger asChild>
                 <button className='text-xs mr-1 hover:bg-gray-200 border shadow-sm rounded-sm px-2 py-1'>
                   + Points
@@ -351,14 +371,14 @@ export default function ManageEventPage() {
                 <DialogHeader>
                   <DialogTitle>Award All Guests Points</DialogTitle>
                   <DialogDescription>
-                    <div className='flex space-x-2 mt-4'>
-                      <p>Award Points:</p>
+                    <div className='flex items-center space-x-2 mt-4'>
+                      <span className='text-sm'>Award Points:</span>
                       <input
                         type='number'
                         min={1}
                         max={remainingPoints}
-                        value={awardedPoints}
-                        onChange={(e) => setAwardedPoints(e.target.value)}
+                        value={awardedPointsAll ?? ''}
+                        onChange={(e) => setAwardedPointsAll(e.target.value)}
                         className='border w-[70px] rounded-md p-1'
                       />
                     </div>
@@ -366,12 +386,12 @@ export default function ManageEventPage() {
                       <button
                         className='bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700'
                         onClick={() => {
-                            if (!awardedPoints || Number(awardedPoints) <= 0) {
+                            if (!awardedPointsAll || Number(awardedPointsAll) <= 0) {
                               return;
                             }
-                            addPointsToAllGuests(awardedPoints);
-                            setOpen(false);
-                            setAwardedPoints(null);
+                            addPointsToAllGuests(awardedPointsAll);
+                            setOpenAll(false);
+                            setAwardedPointsAll('');
                         }}
                       >
                         Submit
@@ -416,48 +436,46 @@ export default function ManageEventPage() {
                     <span className="text-sm truncate flex-1">{guest.utorid || guest}</span>
                     {/* <button className='text-xs mr-1 hover:bg-gray-200 rounded-sm px-2 py-1'>points: xx</button> */}
                     {/* {user.role === 'event organizer' && ( */}
-                    <Dialog open={open} onOpenChange={setOpen}>
-                      <DialogTrigger 
-                        asChild
-                        onClick={() => setCurrUser(guest)}
-                      >
-                        <button className='text-xs mr-1 hover:bg-gray-200 rounded-sm px-2 py-1 border'>
-                          points
-                        </button>
-                      </DialogTrigger>
+                    <Dialog open={openGuest} onOpenChange={setOpenGuest}>
+                      <DialogTrigger asChild>
+                          <button className='text-xs mr-1 hover:bg-gray-200 rounded-sm px-2 py-1 border' onClick={() => { setCurrUser(guest); setOpenGuest(true); }}>
+                            points
+                          </button>
+                        </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle>Award {currUser.utorid} points</DialogTitle>
+                          <DialogTitle>Award {currUser?.utorid ?? ''} points</DialogTitle>
                           <DialogDescription>
-                            <p className='mt-2'>Current Points: {currUser.points}</p>
-                            <div className='flex space-x-2 mt-2'>
-                              <p>Award Points:</p>
-                              <input
-                                type='number'
-                                min={1}
-                                max={remainingPoints}
-                                value={awardedPoints}
-                                onChange={(e) => setAwardedPoints(e.target.value)}
-                                className='border w-[70px] rounded-md p-1'
-                              />
-                            </div>
-                            <div className="flex justify-end mt-3">
-                              <button
-                                className='bg-blue-600 text-white px-3 py-1 rounded-md'
-                                onClick={() => {
-                                    if (!awardedPoints || Number(awardedPoints) <= 0) {
-                                      return;
-                                    }
-                                    handleAddGuestPoints(currUser.utorid, awardedPoints);
-                                    setOpen(false);
-                                    setAwardedPoints(null);
-                                }}
-                              >
-                                Submit
-                              </button>
-                            </div>
+                            Award points to {currUser?.utorid ?? 'guest'}
                           </DialogDescription>
                         </DialogHeader>
+                          <div className='mt-2'>Current Points: {currUser?.points ?? 'N/A'}</div>
+                          <div className='flex items-center space-x-2 mt-2'>
+                            <span>Award Points:</span>
+                            <input
+                              type='number'
+                              min={1}
+                              max={remainingPoints}
+                              value={awardedPointsGuest ?? ''}
+                              onChange={(e) => setAwardedPointsGuest(e.target.value)}
+                              className='border w-[70px] rounded-md p-1'
+                            />
+                          </div>
+                          <div className="flex justify-end mt-3">
+                            <button
+                              className='bg-blue-600 text-white px-3 py-1 rounded-md'
+                              onClick={() => {
+                                  if (!awardedPointsGuest || Number(awardedPointsGuest) <= 0) {
+                                    return;
+                                  }
+                                  handleAddGuestPoints(currUser?.utorid, awardedPointsGuest);
+                                  setOpenGuest(false);
+                                  setAwardedPointsGuest('');
+                              }}
+                            >
+                              Submit
+                            </button>
+                          </div>
                       </DialogContent>
                     </Dialog>
                     {/* )} */}

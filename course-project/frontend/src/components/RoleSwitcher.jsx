@@ -37,7 +37,7 @@ export default function RoleSwitcher() {
         <div className="flex gap-2 justify-center print:hidden">
             {showManager && (
                 <button
-                    onClick={() => navigate('/managers/dashboard')}
+                    onClick={() => navigate('/managers')}
                     className={buttonClass(isInManagerView)}
                 >
                     Manager View

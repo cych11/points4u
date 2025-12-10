@@ -106,7 +106,7 @@ export const AuthProvider = ({ children }) => {
             if (userData.role === 'cashier') {
                 navigate("/cashier");
             } else if (userData.role === 'manager' || userData.role === 'superuser') {
-                navigate("/managers/dashboard");
+                navigate("/managers");
             } else {
                 navigate("/user");
             }

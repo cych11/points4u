@@ -4,45 +4,32 @@ import { useNavigate } from 'react-router-dom';
 const AuthContext = createContext(null);
 const BACKEND_URL = "/api";
 
-/*
- * This provider should export a `user` context state that is 
- * set (to non-null) when:
- *     1. a hard reload happens while a user is logged in.
- *     2. the user just logged in.
- * `user` should be set to null when:
- *     1. a hard reload happens when no users are logged in.
- *     2. the user just logged out.
- */
+
 export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Check token and fetch user on mount
     useEffect(() => {
-        const token = localStorage.getItem("token");  // retrieve token from localStorage
-        if (!token) return;  // if no token was retrieved, user isn't logged in
+        const token = localStorage.getItem("token");
+        if (!token) return;
 
-        // validate token
         const fetchUser = async () => {
             try {
-                // fetch user data
                 const res = await fetch(`${BACKEND_URL}/users/me`, {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                     },
                 });
 
-                // token no longer valid, remove it and log out
                 if (!res.ok) {
                     localStorage.removeItem("token");
                     setUser(null);
                     return;
                 }
 
-                // update user context state
                 const data = await res.json();
-                setUser(data); // response is user object directly
+                setUser(data);
             } catch {
                 localStorage.removeItem("token");
                 setUser(null);

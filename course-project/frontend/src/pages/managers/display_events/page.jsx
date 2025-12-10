@@ -6,59 +6,12 @@ import EventFilter from "@/components/EventFilter.jsx";
 import FilterCheckBox from "@/components/FilterCheckBox";
 import { useAuth } from "../../../contexts/AuthContext";
 
-const mock_data = [
-  {
-    id: 1,
-    name: "Event 1",
-    location: "BA 2250",
-    startTime: "2025-11-10T09:00:00Z",
-    endTime: "2025-11-10T17:00:00Z",
-    capacity: 200,
-    numGuests: 0,
-  },
-  {
-    id: 2,
-    name: "Event 2",
-    location: "Online",
-    startTime: "2025-12-01T12:00:00Z",
-    endTime: "2025-12-01T15:00:00Z",
-    capacity: 100,
-    numGuests: 50,
-  },
-  {
-    id: 3,
-    name: "Event 3",
-    location: "Online",
-    startTime: "2025-12-08T12:00:00Z",
-    endTime: "2025-12-10T15:00:00Z",
-    capacity: 100,
-    numGuests: 50,
-  },
-  {
-    id: 4,
-    name: "Event 4",
-    location: "Online",
-    startTime: "2025-12-01T12:00:00Z",
-    endTime: "2025-12-01T15:00:00Z",
-    capacity: 100,
-    numGuests: 50,
-  },
-  {
-    id: 5,
-    name: "Event 5",
-    location: "Online",
-    startTime: "2025-12-01T12:00:00Z",
-    endTime: "2025-12-01T15:00:00Z",
-    capacity: 100,
-    numGuests: 50,
-  }
-]
-
 export default function DisplayEventsPage() {
   const { setPage } = useContext(PageContext);
   const { user } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
-  const [filteredData, setFilteredData] = useState(mock_data);
+  const [allEvents, setAllEvents] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [filteredNames, setFilteredNames] = useState([]);
   const [filteredLocations, setFilteredLocations] = useState([]);
   const [startedOnly, setStartedOnly] = useState(false);
@@ -86,7 +39,7 @@ export default function DisplayEventsPage() {
 
       if (response.ok) {
         console.log(body);
-        setFilteredData(body.results);
+        setAllEvents(body.results);
       } else {
         console.log('Failed to fetch events', body);
       }
@@ -96,14 +49,14 @@ export default function DisplayEventsPage() {
 
   useEffect(() => {
     function applyFilters() {
-      setFilteredData(mock_data.filter(event => {
+      setFilteredData(allEvents.filter(event => {
         for (let name of filteredNames) {
           if (!event.name.toLowerCase().includes(name.toLowerCase())) {
             return false;
           }
         }
         for (let location of filteredLocations) {
-          if (!event.location.toLowerCase().includes(location.toLowerCase())) {
+          if ((!event.location && !location.toLowerCase().includes('tbd')) || !event.location.toLowerCase().includes(location.toLowerCase())) {
             return false;
           }
         }
@@ -126,10 +79,12 @@ export default function DisplayEventsPage() {
         }
         if (viewOrganizerEvents) {
           let found = false;
-          for (let i = 0; i < event.organizers.length; i++) {
-            if (event.organizers[i].utorid === user.utorid) {
-              found = true
-              break;
+          if (event.organizers && event.organizers.length > 0) {
+            for (let i = 0; i < event.organizers.length; i++) {
+              if (event.organizers[i].utorid === user.utorid) {
+                found = true
+                break;
+              }
             }
           }
           if (!found) return false;
@@ -138,11 +93,11 @@ export default function DisplayEventsPage() {
       }));
     }
     applyFilters();
-  }, [filteredNames, filteredLocations, startedOnly, endedOnly, showFull, viewOrganizerEvents, user]);
+  }, [filteredNames, filteredLocations, startedOnly, endedOnly, showFull, viewOrganizerEvents, user, allEvents]);
 
   return (
-    <div className="flex ml-40 mt-5">
-      <div className="w-[50%]">
+    <div className="flex flex-col lg:flex-row lg:ml-40 ml-4 mt-5 gap-6">
+      <div className="w-full lg:w-1/2">
         <h1 className="text-3xl font-bold">Events</h1>
         <div className="flex justify-between items-center">
           <div className="flex space-x-3 items-center mt-4">
@@ -151,7 +106,7 @@ export default function DisplayEventsPage() {
           </div>
           <button className={`border rounded-lg px-3 text-sm h-[40px] hover:scale-[1.01] shadow-sm ${viewOrganizerEvents ? 'bg-blue-100' : 'hover:bg-gray-100'}`} onClick={() => setViewOrganizerEvents(!viewOrganizerEvents)}>View My Events</button>
         </div>
-        <div className='space-y-4 max-h-[580px] min-h-[580px] overflow-y-auto mt-3'>
+        <div className='space-y-4 max-h-[60vh] lg:max-h-[580px] min-h-[40vh] lg:min-h-[580px] overflow-y-auto mt-3'>
           {filteredData.slice((currentPage - 1) * eventsPerPage, ((currentPage - 1) * eventsPerPage) + eventsPerPage).map((event) => (
             <Event key={event.id} event={event} />
           ))}
@@ -163,7 +118,7 @@ export default function DisplayEventsPage() {
           <Pagination count={Math.ceil(filteredData.length / eventsPerPage)} page={currentPage} onChange={(event, value) => setCurrentPage(value)} />
         </div>
       </div>
-      <div className="ml-16 mt-[90px] w-[35%]">
+      <div className="w-full lg:w-1/3 lg:ml-16 mt-6 lg:mt-[90px]">
         <h2 className="text-xl font-semibold">Filter Events</h2>
         <div className='mt-10'>
           <EventFilter filter={filteredNames} onChange={setFilteredNames} type="Name" />

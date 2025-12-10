@@ -9,15 +9,11 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
 import RoleSwitcher from "@/components/RoleSwitcher.jsx";
-import { useContext } from "react";
-import { PageContext } from "./contexts/PageContext.jsx";
 
 const eventPages = ['create-events', 'display-events', 'manage-event', 'event-users', 'manage-permissions'];
 const navLinkCSS = 'px-4 h-[37px] flex items-center rounded-md hover:bg-neutral-100 transition-colors cursor-pointer text-xl font-medium';
 
 export default function ManagerLayout() {
-  const { user, logout } = useAuth();
-  const { page, setPage } = useContext(PageContext);
   const navigate = useNavigate();
   const location = useLocation();
   const splitURL = location.pathname.split("/")
@@ -27,7 +23,7 @@ export default function ManagerLayout() {
   return (
     <div>
       <div className='flex p-2 border-b space-x-8 pl-6 text-3xl'>
-        <h2 className="flex items-center">{true === true ? 'Manager View' : true === true ? 'Event Organizer View' : 'Superuser View'}</h2>
+        <h2 className="flex items-center">Manager View</h2>
         <div className="flex justify-between flex-1">
           <div className='flex'>
             <NavigationMenu>

@@ -3,7 +3,7 @@ import DateTimeField from "@/components/DateTimeField";
 
 export default function EventDetailsCard({ handleSubmit, eventName, setEventName, description, setDescription, location, setLocation, capacity, setCapacity, startDate, setStartDate, endDate, setEndDate, points, setPoints, errorMsg, successMsg, type }) {
   return (
-    <div className="ml-40 mt-20 border w-[60%] p-6 rounded-lg shadow-sm">
+    <div className="ml-16 mt-20 border w-[60%] p-6 rounded-lg shadow-sm">
       <h1 className='text-2xl font-bold'>{type} Event</h1>
       <form onSubmit={(e) => {
         e.preventDefault();

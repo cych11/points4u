@@ -96,7 +96,7 @@ export default function DisplayEventsPage() {
   }, [filteredNames, filteredLocations, startedOnly, endedOnly, showFull, viewOrganizerEvents, user, allEvents]);
 
   return (
-    <div className="flex flex-col lg:flex-row lg:ml-40 ml-4 mt-5 gap-6 md:min-w-[700px]">
+    <div className="flex flex-col max-lg:mb-20 lg:flex-row lg:ml-40 ml-4 mt-5 gap-6 md:min-w-[700px]">
       <div className="w-full lg:w-1/2">
         <h1 className="text-3xl font-bold">Events</h1>
         <div className="flex justify-between items-center">

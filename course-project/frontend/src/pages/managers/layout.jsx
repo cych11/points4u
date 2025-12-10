@@ -8,6 +8,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
 import RoleSwitcher from "@/components/RoleSwitcher.jsx";
+import HamburgerMenu from "@/components/HamburgerMenu.jsx";
 
 const eventPages = ['create-events', 'display-events', 'manage-event', 'event-users', 'manage-permissions'];
 const navLinkCSS = 'px-4 h-[37px] flex items-center rounded-md hover:bg-neutral-100 transition-colors cursor-pointer text-xl font-medium';
@@ -21,10 +22,14 @@ export default function ManagerLayout() {
 
   return (
     <div>
-      <div className='flex p-2 border-b space-x-8 pl-6 text-3xl'>
-        <h2 className="flex items-center">Manager View</h2>
-        <div className="flex justify-between flex-1">
-          <div className='flex'>
+      <div className='flex p-2 border-b space-x-4 lg:space-x-8 pl-4 lg:pl-6 items-center'>
+        <h2 className="text-2xl lg:text-3xl font-semibold whitespace-nowrap">Manager View</h2>
+        <div className="flex lg:hidden ml-auto gap-4 items-center">
+          <HamburgerMenu />
+          <RoleSwitcher />
+        </div>
+        <div className="hidden lg:flex justify-between flex-1 gap-4">
+          <div className='flex gap-2'>
             <NavigationMenu>
               <NavigationMenuList>
                 {/* Dashboard */}
@@ -77,13 +82,11 @@ export default function ManagerLayout() {
                   <NavigationMenuContent className="w-[300px]">
                     <div className="p-2 whitespace-nowrap">
                       <NavigationMenuLink className={navLinkCSS} onClick={() => {
-                        // setPage('create-events');
                         navigate('/managers/create-events');
                       }}>
                         Create Event
                       </NavigationMenuLink>
                       <NavigationMenuLink className={navLinkCSS} onClick={() => {
-                        // setPage('display-events');
                         navigate('/managers/display-events');
                       }}>
                         View Events
@@ -94,7 +97,7 @@ export default function ManagerLayout() {
               </NavigationMenuList>
             </NavigationMenu>
           </div>
-          <div className='flex items-center pr-12'>
+          <div className='flex items-center'>
               <RoleSwitcher />
           </div>
         </div>

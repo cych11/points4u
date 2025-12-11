@@ -8,7 +8,7 @@ async function main() {
   await prisma.user.createMany({
     data: [
       // regulars
-      { utorid: "u001", email: "u001@mail.utoronto.ca", name: "Alice", role: RoleType.regular, points: 100 },
+      { utorid: "u001", email: "u001@mail.utoronto.ca", name: "Alice", role: RoleType.regular, points: 100, password: "$2b$10$J3ZVsAmuPOU49bqwj9HzEeLPiRouw54ybOtInFPtZpUpRvLb0zwmy" },
       { utorid: "u002", email: "u002@mail.utoronto.ca", name: "Bob", role: RoleType.regular, points: 200 },
       { utorid: "u003", email: "u003@mail.utoronto.ca", name: "Cindy", role: RoleType.regular, points: 300 },
       { utorid: "u004", email: "u004@mail.utoronto.ca", name: "Daniel", role: RoleType.regular, points: 400 },
@@ -17,15 +17,15 @@ async function main() {
       { utorid: "u007", email: "u007@mail.utoronto.ca", name: "Grace", role: RoleType.regular, points: 0 },
 
       // cashiers
-      { utorid: "cashier1", email: "cashier1@mail.utoronto.ca", name: "Hank", role: RoleType.cashier, points: 8000 },
+      { utorid: "cashier1", email: "cashier1@mail.utoronto.ca", name: "Hank", role: RoleType.cashier, points: 8000, password: "$2b$10$J3ZVsAmuPOU49bqwj9HzEeLPiRouw54ybOtInFPtZpUpRvLb0zwmy" },
       { utorid: "cashier2", email: "cashier2@mail.utoronto.ca", name: "Ivan", role: RoleType.cashier, suspicious: true, points: 6000 },
 
       // managers
-      { utorid: "manager1", email: "manager1@mail.utoronto.ca", name: "Josh", role: RoleType.manager, points: 15000 },
+      { utorid: "manager1", email: "manager1@mail.utoronto.ca", name: "Josh", role: RoleType.manager, points: 15000, password: "$2b$10$J3ZVsAmuPOU49bqwj9HzEeLPiRouw54ybOtInFPtZpUpRvLb0zwmy" },
       { utorid: "manager2", email: "manager2@mail.utoronto.ca", name: "Kelly", role: RoleType.manager, points: 20000 },
 
       // superusers
-      { utorid: "super1", email: "super1@mail.utoronto.ca", name: "Landon", role: RoleType.superuser, points: 100000 },
+      { utorid: "super1", email: "super1@mail.utoronto.ca", name: "Landon", role: RoleType.superuser, points: 100000, password: "$2b$10$J3ZVsAmuPOU49bqwj9HzEeLPiRouw54ybOtInFPtZpUpRvLb0zwmy" },
       { utorid: "super2", email: "super2@mail.utoronto.ca", name: "Morris", role: RoleType.superuser, points: 1000000 },
     ]
   });

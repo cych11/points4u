@@ -23,7 +23,7 @@ export default function ResetPasswordPage() {
         setLoading(true);
 
         try {
-            const response = await fetch(`/api/auth/resets/${token}`, {
+            const response = await fetch(`${BACKEND_URL}/api/auth/resets/${token}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

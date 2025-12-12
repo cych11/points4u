@@ -45,7 +45,7 @@ export default function DisplayUsersPage() {
                 params.append('page', currentPage);
                 params.append('limit', usersPerPage);
 
-                const response = await fetch(`/api/users?${params.toString()}`, {
+                const response = await fetch(`${BACKEND_URL}/api/users?${params.toString()}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

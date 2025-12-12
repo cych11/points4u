@@ -37,7 +37,7 @@ export default function EditUserPage() {
 
     async function getUserDetails() {
         const token = localStorage.getItem('token');
-        const response = await fetch(`/api/users/${id}`, {
+        const response = await fetch(`${BACKEND_URL}/api/users/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ export default function EditUserPage() {
         const token = localStorage.getItem("token");
 
         try {
-            const response = await fetch(`/api/users/${id}`, {
+            const response = await fetch(`${BACKEND_URL}/api/users/${id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -94,7 +94,7 @@ export default function EditUserPage() {
         const token = localStorage.getItem("token");
 
         try {
-            const response = await fetch(`/api/users/${id}`, {
+            const response = await fetch(`${BACKEND_URL}/api/users/${id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -122,7 +122,7 @@ export default function EditUserPage() {
         const token = localStorage.getItem("token");
 
         try {
-            const response = await fetch(`/api/users/${id}`, {
+            const response = await fetch(`${BACKEND_URL}/api/users/${id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -151,7 +151,7 @@ export default function EditUserPage() {
         const token = localStorage.getItem("token");
 
         try {
-            const response = await fetch(`/api/users/${id}`, {
+            const response = await fetch(`${BACKEND_URL}/api/users/${id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -178,7 +178,7 @@ export default function EditUserPage() {
 
     async function handleSubmit() {
         const token = localStorage.getItem('token');
-        const response = await fetch(`/api/users/${id}`, {
+        const response = await fetch(`${BACKEND_URL}/api/users/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

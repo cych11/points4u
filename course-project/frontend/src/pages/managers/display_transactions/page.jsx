@@ -60,7 +60,7 @@ export default function DisplayTransactionsPage() {
                 params.append('page', currentPage);
                 params.append('limit', transactionsPerPage);
 
-                const response = await fetch(`/api/transactions?${params.toString()}`, {
+                const response = await fetch(`${BACKEND_URL}/api/transactions?${params.toString()}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

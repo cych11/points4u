@@ -53,7 +53,7 @@ export default function ManageEventPage() {
     async function openDialog() {
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch(`/api/users/${currUser.id}`, {
+        const response = await fetch(`${BACKEND_URL}/api/users/${currUser.id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ export default function ManageEventPage() {
   useEffect(() => {
     async function getEventDetails() {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/events/${id}`, {
+      const response = await fetch(`${BACKEND_URL}/api/events/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ export default function ManageEventPage() {
 
   async function handleSubmit() {
     const token = localStorage.getItem('token');
-    const response = await fetch(`/api/events/${id}`, {
+    const response = await fetch(`${BACKEND_URL}/api/events/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -138,7 +138,7 @@ export default function ManageEventPage() {
       return null;
     }
     const token = localStorage.getItem('token');
-    const response = await fetch(`/api/events/${id}/points`, {
+    const response = await fetch(`${BACKEND_URL}/api/events/${id}/points`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -174,7 +174,7 @@ export default function ManageEventPage() {
 
   async function addPointsToAllGuests(points) {
     const token = localStorage.getItem('token');
-    const response = await fetch(`/api/events/${id}/points`, {
+    const response = await fetch(`${BACKEND_URL}/api/events/${id}/points`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -200,7 +200,7 @@ export default function ManageEventPage() {
 
   async function handleAddedGuest(utorid) {
     const token = localStorage.getItem('token');
-    const response = await fetch(`/api/events/${id}/guests`, {
+    const response = await fetch(`${BACKEND_URL}/api/events/${id}/guests`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -221,7 +221,7 @@ export default function ManageEventPage() {
 
   async function handleAddedOrganizer(utorid) {
     const token = localStorage.getItem('token');
-    const response = await fetch(`/api/events/${id}/organizers`, {
+    const response = await fetch(`${BACKEND_URL}/api/events/${id}/organizers`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -242,7 +242,7 @@ export default function ManageEventPage() {
 
   async function handleDeleteGuest(user_id) {
     const token = localStorage.getItem('token');
-    const response = await fetch(`/api/events/${id}/guests/${user_id}`, {
+    const response = await fetch(`${BACKEND_URL}/api/events/${id}/guests/${user_id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -262,7 +262,7 @@ export default function ManageEventPage() {
 
   async function handleDeleteOrganizer(user_id) {
     const token = localStorage.getItem('token');
-    const response = await fetch(`/api/events/${id}/organizers/${user_id}`, {
+    const response = await fetch(`${BACKEND_URL}/api/events/${id}/organizers/${user_id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

@@ -16,7 +16,7 @@ export default function ProcessRedemptionPage() {
 
         const token = localStorage.getItem("token");
         try {
-            const response = await fetch(`/api/transactions/${transactionId}`, {
+            const response = await fetch(`${BACKEND_URL}/api/transactions/${transactionId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -44,7 +44,7 @@ export default function ProcessRedemptionPage() {
     const handleApprove = async () => {
         const token = localStorage.getItem("token");
         try {
-            const response = await fetch(`/api/transactions/${transactionId}/processed`, {
+            const response = await fetch(`${BACKEND_URL}/api/transactions/${transactionId}/processed`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

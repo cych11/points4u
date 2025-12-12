@@ -38,7 +38,7 @@ export default function UserEventsPage() {
 
     const handleRSVP = async (eventId) => {
         try {
-            const response = await fetch(`/api/events/${eventId}/rsvps`, {
+            const response = await fetch(`${BACKEND_URL}/api/events/${eventId}/rsvps`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

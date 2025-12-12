@@ -36,7 +36,7 @@ export default function EditTransactionPage() {
 
     async function getTransactionDetails() {
         const token = localStorage.getItem('token');
-        const response = await fetch(`/api/transactions/${id}`, {
+        const response = await fetch(`${BACKEND_URL}/api/transactions/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ export default function EditTransactionPage() {
         const token = localStorage.getItem("token");
 
         try {
-            const response = await fetch(`/api/transactions/${id}/suspicious`, {
+            const response = await fetch(`${BACKEND_URL}/api/transactions/${id}/suspicious`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -103,7 +103,7 @@ export default function EditTransactionPage() {
         }
         const token = localStorage.getItem("token");
         try {
-            const response = await fetch(`/api/transactions`, {
+            const response = await fetch(`${BACKEND_URL}/api/transactions`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -53,7 +53,7 @@ export default function ManagePromotionPage() {
     useEffect(() => {
         async function getPromotion() {
             const token = localStorage.getItem('token');
-            const response = await fetch(`/api/promotions/${id}`, {
+            const response = await fetch(`${BACKEND_URL}/api/promotions/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -108,7 +108,7 @@ export default function ManagePromotionPage() {
 
         console.log("PATCH body:", patchBody);
 
-        const response = await fetch(`/api/promotions/${id}`, {
+        const response = await fetch(`${BACKEND_URL}/api/promotions/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

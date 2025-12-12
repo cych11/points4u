@@ -52,7 +52,7 @@ export default function DisplayPromotionsPage() {
                 params.append('page', currentPage);
                 params.append('limit', promotionsPerPage);
 
-                const response = await fetch(`/api/promotions?${params.toString()}`, {
+                const response = await fetch(`${BACKEND_URL}/api/promotions?${params.toString()}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

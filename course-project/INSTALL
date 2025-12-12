@@ -1,12 +1,26 @@
-# This text file should explain how to deploy your website.
+To deploy the website, you must install packages in the backend, this is done by doing:
+"cd course-project/backend" followed by:
+"npm install express prisma @prisma/client sqlite3 bcrypt jsonwebtoken cors multer zod uuid"
+"npm install --save-dev nodemon"
+"npx prisma migrate deploy"
+"npm run seed"
+For the frontend, execute the following:
+"cd course-project/frontend" followed by:
+"npm install express prisma @prisma/client sqlite3 bcrypt jsonwebtoken cors multer zod uuid" and
+"npm install --save-dev nodemon"
 
-# You should write detailed description on:
+Running "npm run dev" on both frontend and backend directories allows you to run the application locally.
 
-# 1. All the packages you need to install
-# 2. How to configure various servers (e.g., Nginx, Apache, etc)
-
-To deploy the website, you must install packages in the frontend, this is done by doing:
-"cd course-project/frontend" followed by "npm install", then to run the frontend, execute "npm run dev"
-For the backend, execute the following:
-"cd course-project/backend" followed by "npm install" as well as "npx prisma migrate dev", then to run the backend, execute "npm run dev"
-
+We deployed using Railway, to deploy this yourself using Railway, follow these steps:
+1. Create a Railway project and link your backend folder.
+2. Set variables in the raw env editor on Railway:
+    JWT_SECRET=SECRET-TOKEN-HERE
+3. Create another service for the frontend.
+4. Set environment variables for API URL:
+    VITE_API_URL=https://BACKEND_URL.up.railway.app
+5. Set the build command as: "npm run build"
+6. If SQLite is being used for the database, we used this template on Railway to integrate the database:
+    https://railway.com/deploy/jOiNFt
+    Deploy this in the same service as the backend, and add this to the variables found in step 2:
+    DATABASE_URL=DATABASE-URL-HERE.up.railway.app
+7. Deploy the frontend, backend, and database

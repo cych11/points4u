@@ -106,8 +106,6 @@ export default function ManagePromotionPage() {
 
         const patchBody = onlyChanged(original, updated);
 
-        console.log("PATCH body:", patchBody);
-
         const response = await fetch(`${BACKEND_URL}/api/promotions/${id}`, {
             method: 'PATCH',
             headers: {

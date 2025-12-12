@@ -1,0 +1,10 @@
+Michal Buczek:
+  My AI use is as follows:
+  - used Chat GPT and Google Gemini for small syntax related queries
+  - Used Github Co-Pilot for some autocomplete on small code segments
+  - Generated fronted UI code with Github Co-Pilot for listing event guests and organizers, 
+    I read through the code and understood it and manual modifications and additions, such as points awarding.
+  - I also generated the burger navigation menus with Github Co-Pilot to speed up development. 
+    Again, I made sure I understand the code.
+  - Used Chat GPT for debugging console error messages and implementation, but made sure to manually do corrections and solved most of them myself.
+  - I am not aware of the extent to which AI was used by team members so will not comment on their usage.

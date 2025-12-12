@@ -218,6 +218,7 @@ export default function ManageEventPage() {
   }
 
   async function handleAddedOrganizer(utorid) {
+
     const token = localStorage.getItem('token');
     const response = await fetch(`/api/events/${id}/organizers`, {
       method: 'POST',
@@ -228,7 +229,7 @@ export default function ManageEventPage() {
       body: JSON.stringify({ utorid: utorid })
     });
     if (!response.ok) {
-      toast("Failed to add guest", {
+      toast("Failed to add organizer", {
         description: "There was an error adding guest",
         action: {
           label: "Ok",
@@ -316,6 +317,11 @@ export default function ManageEventPage() {
             <button
               onClick={() => {
                 if (newOrganizerUtorid.trim()) {
+                  for (const organizer in organizerList) {
+                    if (organizer.utorid === newOrganizerUtorid) {
+                      return;
+                    }
+                  }
                   handleAddedOrganizer(newOrganizerUtorid);
                   setOrganizerList([...organizerList, { utorid: newOrganizerUtorid }]);
                   setNewOrganizerUtorid('');

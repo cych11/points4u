@@ -1,6 +1,13 @@
 # This text file should explain how to deploy your website.
-
+The website is not deployed :(
 # You should write detailed description on:
 
 # 1. All the packages you need to install
 # 2. How to configure various servers (e.g., Nginx, Apache, etc)
+To run the project: 
+1. Download the project folder
+2. Navigate to the backend folder and run 'npm i' in the terminal
+3. then run 'node index.js <port>' (example port: 3000)
+4. then navigate to the frontend folder and run 'npm i' in the terminal
+5. finally, run 'npm run dev' in the terminal while in the frontend directory
+6. Access the site at the url provided in the terminal output after running the command at step 5

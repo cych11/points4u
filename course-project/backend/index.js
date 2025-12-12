@@ -5,30 +5,36 @@ require('dotenv').config();
 const port = process.env.PORT || 3000;
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const routes = require('./src/routes');
 
 const app = express();
+
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-// enable json parsing
+app.use(cors({
+    origin: FRONTEND_URL,
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  }));
+
+// Handle preflight requests globally
+app.options('*', cors());
+
+// JSON parsing
 app.use(express.json());
 
-// Global CORS handler for all routes and preflight
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', FRONTEND_URL);
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
+// API routes
+app.use('/api', routes);
 
-  // handle preflight options request
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(204);
-  }
-  next();
+// Serve React frontend build (optional but recommended)
+app.use(express.static(path.join(__dirname, 'dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
-app.use('/api', routes); // mount API routes
-
+// Start server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

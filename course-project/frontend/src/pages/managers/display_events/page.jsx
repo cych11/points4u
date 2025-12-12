@@ -40,7 +40,6 @@ export default function DisplayEventsPage() {
       const body = await response.json();
 
       if (response.ok) {
-        console.log(body);
         setAllEvents(body.results);
       } else {
         console.log('Failed to fetch events', body);

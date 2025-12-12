@@ -151,10 +151,8 @@ export default function ManageEventPage() {
         remark: null
       })
     });
-    console.log(response);
     if (!response.ok) {
       const body = await response.json().catch(() => null);
-      console.log(body);
       const errorMsg = body?.message || `Failed to add points (${response.status})`;
       toast("Failed to add points", {
         description: errorMsg,

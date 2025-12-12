@@ -1,1 +1,0 @@
-AI was used in this project for debugging various methods and providing feedback on already implemented functions to help with clarity, readability, and simplicity.

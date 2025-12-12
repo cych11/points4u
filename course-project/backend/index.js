@@ -3,28 +3,32 @@ require('dotenv').config();
 'use strict';
 
 const port = process.env.PORT || 3000;
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
+const cors = require('cors');
 const routes = require('./src/routes');
+
 const app = express();
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
-
-// Enable JSON parsing
+// enable json parsing
 app.use(express.json());
 
-// enable CORS
-app.use(cors({
-    origin: FRONTEND_URL,
-    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-}));
+// Global CORS handler for all routes and preflight
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', FRONTEND_URL);
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
 
-app.options('*', cors());
-app.use("/api", routes); // mount API routes
+  // handle preflight options request
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
 
-// Start server
+app.use('/api', routes); // mount API routes
+
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });

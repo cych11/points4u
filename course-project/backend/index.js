@@ -10,7 +10,15 @@ const routes = require('./src/routes');
 const app = express();
 
 // Enable CORS
-app.use(cors());
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+
+app.use(
+  cors({
+    origin: [FRONTEND_URL, "https://railway.app"], 
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Enable trust proxy for accurate IP detection in rate limiting
 app.set('trust proxy', true);

@@ -8,10 +8,10 @@ const express = require("express");
 const cors = require("cors");
 const routes = require('./src/routes');
 const app = express();
-
-// Enable CORS
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
+// Enable CORS
+app.use(express.json());
 app.use(cors({
     origin: FRONTEND_URL,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -20,8 +20,8 @@ app.use(cors({
 
 // Enable trust proxy for accurate IP detection in rate limiting
 app.set('trust proxy', true);
-app.use(express.json());
 app.use("/api", routes);
+app.options('*', cors());
 
 const server = app.listen(port, () => {
     console.log(`Server running on port ${port}`);

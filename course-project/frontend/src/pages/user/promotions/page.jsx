@@ -18,7 +18,7 @@ export default function UserPromotionsPage() {
                 // We'll fetch all and filter in frontend or backend.
                 // Let's assume fetching all active ones is default or we just fetch page 1.
                 // Assuming standard pagination, let's just get the default list.
-                const response = await fetch(`${BACKEND_URL}/promotions?limit=100`, { // Get a reasonable number
+                const response = await fetch(`${BACKEND_URL}/api/promotions?limit=100`, { // Get a reasonable number
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 

@@ -33,7 +33,7 @@ export default function UserProfilePage() {
         const token = localStorage.getItem("token");
 
         try {
-            const response = await fetch(`${BACKEND_URL}/users/me`, {
+            const response = await fetch(`${BACKEND_URL}/api/users/me`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ export default function UserProfilePage() {
         const token = localStorage.getItem("token");
 
         try {
-            const response = await fetch(`${BACKEND_URL}/users/me/password`, {
+            const response = await fetch(`${BACKEND_URL}/api/users/me/password`, {
                 method: 'PATCH', // Assuming PATCH is used for password update based on verification
                 headers: {
                     'Content-Type': 'application/json',

@@ -57,7 +57,7 @@ export default function ManagePermissionsPage() {
 
   useEffect(() => {
     async function getUsers() {
-      const response = await fetch(`${BACKEND_URL}/users`);
+      const response = await fetch(`${BACKEND_URL}/api/users`);
       const result = await response.json();
       setUsers(result.results)
     }

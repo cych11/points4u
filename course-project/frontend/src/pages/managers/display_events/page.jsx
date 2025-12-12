@@ -29,7 +29,7 @@ export default function DisplayEventsPage() {
   useEffect(() => {
     async function getEvents() {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${BACKEND_URL}/events`, {
+      const response = await fetch(`${BACKEND_URL}/api/events`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

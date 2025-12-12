@@ -65,7 +65,7 @@ export default function CreatePromotionsPage() {
             return;
         }
 
-        const response = await fetch(`${BACKEND_URL}/promotions`, {
+        const response = await fetch(`${BACKEND_URL}/api/promotions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

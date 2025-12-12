@@ -14,7 +14,7 @@ export default function UserTransactionsPage() {
             const token = localStorage.getItem("token");
             try {
                 // Default fetching page 1, limit 50 for now
-                const response = await fetch(`${BACKEND_URL}/users/me/transactions?limit=50`, {
+                const response = await fetch(`${BACKEND_URL}/api/users/me/transactions?limit=50`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

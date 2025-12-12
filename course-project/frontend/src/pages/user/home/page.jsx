@@ -14,7 +14,7 @@ export default function UserHomePage() {
         const fetchRecentTransactions = async () => {
             const token = localStorage.getItem("token");
             try {
-                const response = await fetch(`${BACKEND_URL}/users/me/transactions?limit=5`, {
+                const response = await fetch(`${BACKEND_URL}/api/users/me/transactions?limit=5`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (response.ok) {

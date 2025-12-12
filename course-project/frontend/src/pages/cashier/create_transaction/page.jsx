@@ -38,7 +38,7 @@ export default function CreateTransactionPage() {
         };
 
         try {
-            const response = await fetch(`${BACKEND_URL}/transactions`, {
+            const response = await fetch(`${BACKEND_URL}/api/transactions`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

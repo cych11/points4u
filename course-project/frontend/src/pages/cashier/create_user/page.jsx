@@ -30,7 +30,7 @@ export default function CreateUserPage() {
         }
 
         try {
-            const response = await fetch(`${BACKEND_URL}/users`, {
+            const response = await fetch(`${BACKEND_URL}/api/users`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

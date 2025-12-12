@@ -64,7 +64,7 @@ export default function CreateEventsPage() {
       return;
     }
     
-    const response = await fetch(`${BACKEND_URL}/events`, {
+    const response = await fetch(`${BACKEND_URL}/api/events`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

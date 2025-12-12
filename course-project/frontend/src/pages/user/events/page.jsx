@@ -13,7 +13,7 @@ export default function UserEventsPage() {
 
     const fetchEvents = async () => {
         try {
-            const response = await fetch(`${BACKEND_URL}/events`, {
+            const response = await fetch(`${BACKEND_URL}/api/events`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

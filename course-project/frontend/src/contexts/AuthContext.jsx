@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
 
         const fetchUser = async () => {
             try {
-                const res = await fetch(`${BACKEND_URL}/users/me`, {
+                const res = await fetch(`${BACKEND_URL}/api/users/me`, {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                     },
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (utorid, password) => {
         try {
             // try to login with user credentials
-            const res = await fetch(`${BACKEND_URL}/auth/tokens`, {
+            const res = await fetch(`${BACKEND_URL}/api/auth/tokens`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ utorid, password }),
@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem("token", token);
 
             // success, fetch user info after login
-            const userRes = await fetch(`${BACKEND_URL}/users/me`, {
+            const userRes = await fetch(`${BACKEND_URL}/api/users/me`, {
                 headers: { "Authorization": `Bearer ${token}` },
             });
 
@@ -120,7 +120,7 @@ export const AuthProvider = ({ children }) => {
      */
     const register = async ({ utorid, name, email, password }) => {
         try {
-            const res = await fetch(`${BACKEND_URL}/auth/register`, {
+            const res = await fetch(`${BACKEND_URL}/api/auth/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ utorid, name, email, password }),

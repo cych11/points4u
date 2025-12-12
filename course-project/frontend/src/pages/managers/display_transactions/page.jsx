@@ -8,6 +8,8 @@ import TransactionTypeDropDown from "@/components/TransactionTypeDropDown.jsx";
 import TransactionAmountFilter from "@/components/TransactionAmountFilter.jsx";
 import Transaction from "@/components/Transaction.jsx";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default function DisplayTransactionsPage() {
     const { setPage } = useContext(PageContext);
 

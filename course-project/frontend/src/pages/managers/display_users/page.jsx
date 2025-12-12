@@ -7,6 +7,8 @@ import FilterCheckBox from "@/components/FilterCheckBox";
 import FilterDropDown from "@/components/FilterDropDown";
 import User from "@/components/User.jsx";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default function DisplayUsersPage() {
     const { setPage } = useContext(PageContext);
 

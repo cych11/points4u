@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default function UserPromotionsPage() {
     const navigate = useNavigate();
     const [promotions, setPromotions] = useState([]);
@@ -16,7 +18,7 @@ export default function UserPromotionsPage() {
                 // We'll fetch all and filter in frontend or backend.
                 // Let's assume fetching all active ones is default or we just fetch page 1.
                 // Assuming standard pagination, let's just get the default list.
-                const response = await fetch('/api/promotions?limit=100', { // Get a reasonable number
+                const response = await fetch(`${BACKEND_URL}/promotions?limit=100`, { // Get a reasonable number
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 

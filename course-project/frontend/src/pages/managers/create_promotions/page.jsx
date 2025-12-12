@@ -6,6 +6,8 @@ import { useContext } from "react";
 import { PageContext } from "../contexts/PageContext.jsx";
 import PromotionDetailsCard from "@/components/PromotionDetailsCard.jsx";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default function CreatePromotionsPage() {
     const navigate = useNavigate();
     const { setPage } = useContext(PageContext);
@@ -63,7 +65,7 @@ export default function CreatePromotionsPage() {
             return;
         }
 
-        const response = await fetch('/api/promotions', {
+        const response = await fetch(`${BACKEND_URL}/promotions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

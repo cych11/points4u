@@ -6,6 +6,8 @@ import EventFilter from "@/components/EventFilter.jsx";
 import FilterCheckBox from "@/components/FilterCheckBox";
 import { useAuth } from "../../../contexts/AuthContext";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default function DisplayEventsPage() {
   const { setPage } = useContext(PageContext);
   const { user } = useAuth();
@@ -27,7 +29,7 @@ export default function DisplayEventsPage() {
   useEffect(() => {
     async function getEvents() {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/events', {
+      const response = await fetch(`${BACKEND_URL}/events`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

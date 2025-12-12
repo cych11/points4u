@@ -8,6 +8,8 @@ import FilterCheckBox from "@/components/FilterCheckBox";
 import PromotionDropDown from "@/components/PromotionDropDown.jsx";
 import Promotion from "@/components/Promotion.jsx";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default function DisplayPromotionsPage() {
     const { setPage } = useContext(PageContext);
     const { user } = useAuth();

@@ -4,6 +4,8 @@ import { useContext } from "react";
 import { PageContext } from "../contexts/PageContext.jsx";
 import EventDetailsCard from "@/components/EventDetailsCard.jsx";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default function CreateEventsPage() {
 
   const { setPage } = useContext(PageContext);
@@ -62,7 +64,7 @@ export default function CreateEventsPage() {
       return;
     }
     
-    const response = await fetch('/api/events', {
+    const response = await fetch(`${BACKEND_URL}/events`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

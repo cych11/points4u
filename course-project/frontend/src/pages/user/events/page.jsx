@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default function UserEventsPage() {
     const navigate = useNavigate();
     const [events, setEvents] = useState([]);
@@ -11,7 +13,7 @@ export default function UserEventsPage() {
 
     const fetchEvents = async () => {
         try {
-            const response = await fetch('/api/events', {
+            const response = await fetch(`${BACKEND_URL}/events`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

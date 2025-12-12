@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default function ResetPasswordPage() {
     const { token } = useParams();
     const navigate = useNavigate();

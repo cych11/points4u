@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default function ForgotPasswordPage() {
     const navigate = useNavigate();
     const [utorid, setUtorid] = useState('');
@@ -15,7 +17,7 @@ export default function ForgotPasswordPage() {
         setMessage(null);
 
         try {
-            const response = await fetch('/api/auth/resets', {
+            const response = await fetch(`${BACKEND_URL}/auth/resets`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../../contexts/AuthContext.jsx";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default function CreateUserPage() {
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -28,7 +30,7 @@ export default function CreateUserPage() {
         }
 
         try {
-            const response = await fetch('/api/users', {
+            const response = await fetch(`${BACKEND_URL}/users`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

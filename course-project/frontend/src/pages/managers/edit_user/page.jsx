@@ -5,6 +5,8 @@ import { PageContext } from "../contexts/PageContext.jsx";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../../contexts/AuthContext.jsx";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 function CheckVerified({ boolean, trueMessage, falseMessage }) {
     return boolean ? (
         <h3 className="inline-block bg-green-200 rounded-lg p-2">{trueMessage}</h3>

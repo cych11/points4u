@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext(null);
-const BACKEND_URL = "/api";
+const BACKEND_URL = import.meta.env.VITE_API_URL;
 
 
 export const AuthProvider = ({ children }) => {

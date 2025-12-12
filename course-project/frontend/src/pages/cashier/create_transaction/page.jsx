@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default function CreateTransactionPage() {
     const navigate = useNavigate();
     // Cashiers can ONLY do purchases now
@@ -36,7 +38,7 @@ export default function CreateTransactionPage() {
         };
 
         try {
-            const response = await fetch('/api/transactions', {
+            const response = await fetch(`${BACKEND_URL}/transactions`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

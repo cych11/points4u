@@ -15,6 +15,8 @@ import {
   DialogClose
 } from "@/components/ui/dialog"
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default function ManageEventPage() {
 
   const { setPage } = useContext(PageContext);

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext.jsx';
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default function UserHomePage() {
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -12,7 +14,7 @@ export default function UserHomePage() {
         const fetchRecentTransactions = async () => {
             const token = localStorage.getItem("token");
             try {
-                const response = await fetch('/api/users/me/transactions?limit=5', {
+                const response = await fetch(`${BACKEND_URL}/users/me/transactions?limit=5`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (response.ok) {

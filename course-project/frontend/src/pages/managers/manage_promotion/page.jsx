@@ -5,6 +5,8 @@ import { useContext } from "react";
 import { PageContext } from "../contexts/PageContext.jsx";
 import PromotionDetailsCard from "@/components/PromotionDetailsCard.jsx";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 function onlyChanged(original, updated) {
     const changed = {};
 

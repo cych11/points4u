@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../../contexts/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default function UserProfilePage() {
     const { user, setUser } = useAuth();
     const navigate = useNavigate();
@@ -31,7 +33,7 @@ export default function UserProfilePage() {
         const token = localStorage.getItem("token");
 
         try {
-            const response = await fetch('/api/users/me', {
+            const response = await fetch(`${BACKEND_URL}/users/me`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -66,7 +68,7 @@ export default function UserProfilePage() {
         const token = localStorage.getItem("token");
 
         try {
-            const response = await fetch('/api/users/me/password', {
+            const response = await fetch(`${BACKEND_URL}/users/me/password`, {
                 method: 'PATCH', // Assuming PATCH is used for password update based on verification
                 headers: {
                     'Content-Type': 'application/json',

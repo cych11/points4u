@@ -6,6 +6,8 @@ import {
 } from "@/components/ui/popover"
 import { PopoverClose } from "@radix-ui/react-popover"
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 const mockUsers = [
   { 
     id: 1, 
@@ -55,7 +57,7 @@ export default function ManagePermissionsPage() {
 
   useEffect(() => {
     async function getUsers() {
-      const response = await fetch('/api/users');
+      const response = await fetch(`${BACKEND_URL}/users`);
       const result = await response.json();
       setUsers(result.results)
     }

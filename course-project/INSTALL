@@ -4,3 +4,9 @@
 
 # 1. All the packages you need to install
 # 2. How to configure various servers (e.g., Nginx, Apache, etc)
+
+To deploy the website, you must install packages in the frontend, this is done by doing:
+"cd course-project/frontend" followed by "npm install", then to run the frontend, execute "npm run dev"
+For the backend, execute the following:
+"cd course-project/backend" followed by "npm install" as well as "npx prisma migrate dev", then to run the backend, execute "npm run dev"
+
